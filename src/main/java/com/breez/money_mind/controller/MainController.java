@@ -1,5 +1,9 @@
 package com.breez.money_mind.controller;
 
+import com.breez.money_mind.exceptions.UserAlreadyExistsException;
+import com.breez.money_mind.model.Users;
+import com.breez.money_mind.model.dto.UsersDTO;
+import com.breez.money_mind.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -7,7 +11,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -18,6 +24,8 @@ public class MainController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	@Autowired
+	private UserService userService;
 
 	@GetMapping("/")
 	public String indexPage(Model model, Principal principal) {
@@ -44,4 +52,21 @@ public class MainController {
 	public String processLogin() {
 		return "redirect:/";
 	}
+
+	@GetMapping("/register-page")
+	public String registerPage() {
+		return "register-page";
+	}
+
+	@PostMapping("/register")
+	public String processRegister(@ModelAttribute UsersDTO userDTO, Model model) {
+		try {
+			userService.saveUser(userDTO);
+			return "login-page";
+		} catch (UserAlreadyExistsException e) {
+			model.addAttribute("errorMessage", e.getMessage());
+			return "register-page";
+		}
+	}
+
 }

@@ -17,13 +17,19 @@ public class CustomAuthenticationFailureHandler extends SimpleUrlAuthenticationF
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 		String errorMessage;
+
 		if (exception instanceof UsernameNotFoundException) {
-			errorMessage = "User not found";
+			errorMessage = "User not found.";
 		} else if (exception instanceof BadCredentialsException) {
-			errorMessage = "Invalid password";
+			if (exception.getCause() instanceof UsernameNotFoundException) {
+				errorMessage = "User not found.";
+			} else {
+				errorMessage = "Invalid password.";
+			}
 		} else {
-			errorMessage = "Authentication failure";
+			errorMessage = "Authentication failure.";
 		}
+
 		setDefaultFailureUrl("/login-page?error=true&message=" + errorMessage);
 		super.onAuthenticationFailure(request, response, exception);
 	}

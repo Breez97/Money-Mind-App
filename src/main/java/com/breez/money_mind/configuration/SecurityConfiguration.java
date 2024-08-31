@@ -10,9 +10,14 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -28,9 +33,10 @@ public class SecurityConfiguration {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		return http
-				.csrf(consumer -> consumer.disable())
+				.csrf(csrf -> csrf.disable())
 				.authorizeRequests(authorize -> authorize
-						.requestMatchers("/", "/register", "/login", "/login-page", "/css/**", "/fonts/**", "/icon/**", "/img/**").permitAll()
+						.requestMatchers("/", "/register", "/register-page", "/login", "/login-page",
+								"/css/**", "/fonts/**", "/icon/**", "/img/**").permitAll()
 						.anyRequest().authenticated()
 				)
 				.formLogin(form -> form
@@ -47,8 +53,9 @@ public class SecurityConfiguration {
 	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-		provider.setPasswordEncoder(new BCryptPasswordEncoder(12));
+		provider.setPasswordEncoder(bCryptPasswordEncoder());
 		provider.setUserDetailsService(userDetailsService);
+		provider.setHideUserNotFoundExceptions(false);
 		return provider;
 	}
 
