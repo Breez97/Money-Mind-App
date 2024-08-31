@@ -1,0 +1,82 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/icon/money.ico">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>MoneyMind</title>
+</head>
+<body>
+<div class="main-container">
+    <div class="header-container">
+        <div class="header-text-container">
+            <div class="title-text"><a href="/">Money Mind</a></div>
+            <div class="header-text">
+                <a href="/transactions">Transactions</a>
+            </div>
+            <div class="header-text">
+                <a href="/subscriptions">Subscriptions</a>
+            </div>
+            <div class="header-text">
+                <a href="/notifications">Notifications</a>
+            </div>
+            <a class="header-logo" href="/profile">
+                <img src="/img/account.svg" alt="profile-logo">
+            </a>
+        </div>
+    </div>
+    <div class="content-container">
+        <div class="title-text">Welcome to MoneyMind!</div>
+        <div class="about-container">
+            <div class="main-text">
+                <b>MoneyMind</b> is your ultimate personal finance management tool designed to help you take control of
+                your spending, track your income, and stay on top of your subscriptions. Whether you're looking to
+                budget better, keep tabs on your financial activities, or receive timely notifications, FinanceTracker
+                has you covered.
+            </div>
+            <div class="features-container">
+                <ul class="features-list">
+                    <li><strong>Expense and Income Tracking:</strong> Easily record and categorize your expenses and
+                        income.
+                        Gain insights into your financial habits with intuitive graphs and reports.
+                    </li>
+                    <li><strong>Subscription Management:</strong> Keep track of all your subscriptions and recurring
+                        payments in one place. Set reminders for upcoming payments to avoid unexpected charges.
+                    </li>
+                    <li><strong>Custom Notifications:</strong> Stay informed with customizable notifications sent
+                        directly
+                        to your Telegram bot or email. Get reminders about upcoming bills, budget alerts, or significant
+                        changes in your financial status.
+                    </li>
+                    <li><strong>User-Friendly Interface:</strong> Our clean and straightforward interface ensures that
+                        managing your finances is a breeze. Whether you're at home or on the go, you can access your
+                        financial information with ease.
+                    </li>
+                    <li><strong>Secure and Private:</strong> Your data's security is our priority. FinanceTracker uses
+                        advanced encryption methods to ensure that your financial information is kept safe and
+                        confidential.
+                    </li>
+                </ul>
+            </div>
+            <div class="main-text">
+                Join <b>MoneyMind</b> and take the first step towards a more organized and secure financial future. With
+                our comprehensive features and user-centric design, managing your finances has never been easier.
+            </div>
+            <div class="main-text">
+                <div th:if="${username} != 'Guest'">
+                    <p>You are logged in as <span th:text="${username}">user</span>.</p>
+                </div>
+
+                <div th:if="${username} == 'Guest'">
+                    Sign Up Now and start mastering your finances with <b>MoneyMind</b>!<br><br>
+                    <a href="/login-page" class="cta-button">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"
+      lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/icon/money.ico">
+    <link rel="stylesheet" href="/css/fonts.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <title>Login</title>
+</head>
+<body>
+<div class="main-container">
+    <div class="header-container">
+        <div class="header-text-container">
+            <div class="title-text"><a href="/">Money Mind</a></div>
+            <div class="header-text">
+                <a href="/transactions">Transactions</a>
+            </div>
+            <div class="header-text">
+                <a href="/subscriptions">Subscriptions</a>
+            </div>
+            <div class="header-text">
+                <a href="/notifications">Notifications</a>
+            </div>
+            <a class="header-logo" href="/profile">
+                <img src="/img/account.svg" alt="profile-logo">
+            </a>
+        </div>
+    </div>
+    <div class="content-container">
+        <div class="about-container">
+            <div class="title-text">Register to MoneyMind</div>
+            <form th:action="@{/register}" method="post" class="login-form">
+                <input type="text" name="name" class="login-field" placeholder="Name" required>
+                <input type="text" name="username" class="login-field" placeholder="Username" required>
+                <input type="password" name="password" class="login-field" placeholder="Password" required>
+                <button type="submit" class="cta-button">Register</button>
+            </form>
+            <div class="main-text">
+                Already have an account?<br>
+                <a href="/login" class="cta-button">Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

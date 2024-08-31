@@ -14,13 +14,10 @@ public class UserService {
 
 	@Autowired
 	private UserRepository userRepository;
-
 	@Autowired
 	private BCryptPasswordEncoder encoder;
-
 	@Autowired
 	private AuthenticationManager authenticationManager;
-
 	@Autowired
 	private JWTService jwtService;
 

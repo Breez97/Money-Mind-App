@@ -22,7 +22,6 @@ public class JwtFilter extends OncePerRequestFilter {
 
 	@Autowired
 	private JWTService jwtService;
-
 	@Autowired
 	ApplicationContext context;
 
