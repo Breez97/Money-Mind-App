@@ -25,7 +25,7 @@ public class Transaction {
 	private String type;
 	private double amount;
 	// expense: supermarkets, clothes, fast_food, transaction, others
-	// income: transaction, ATM, others
+	// income: transaction, atm, others
 	private String category;
 	private LocalDate transactionDate;
 

@@ -1,5 +1,6 @@
 package com.breez.money_mind.service;
 
+import com.breez.money_mind.exceptions.TransactionNotFoundException;
 import com.breez.money_mind.model.Transaction;
 import com.breez.money_mind.model.UserPrincipal;
 import com.breez.money_mind.model.Users;
@@ -12,6 +13,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,12 +28,10 @@ public class TransactionService {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication.isAuthenticated()) {
 			UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-			String username = userPrincipal.getUsername();
-			Users user = userRepository.findByUsername(username);
-			int userId = user.getId();
-			List<Transaction> transactions = transactionRepository.findByUsersId(userId);
+			Users user = userRepository.findByUsername(userPrincipal.getUsername());
+			List<Transaction> transactions = transactionRepository.findByUsersId(user.getId());
 			return transactions.stream()
-					.map(obj -> convertToDTO(obj))
+					.map(obj -> mapToTransactionDTO(obj))
 					.collect(Collectors.toList());
 		}
 		throw new RuntimeException("User is not authenticated");
@@ -44,7 +44,30 @@ public class TransactionService {
 				.sum();
 	}
 
-	private TransactionDTO convertToDTO(Transaction transaction) {
+	public String updateTransactionById(TransactionDTO transactionDTO) {
+		List<TransactionDTO> allTransactions = findAllTransactions();
+		if (!allTransactions.removeIf(transaction -> transaction.getId().equals(transactionDTO.getId()))) {
+			return "Transaction not found";
+		}
+		for (TransactionDTO currentTransactionDTO : allTransactions) {
+			if (Objects.equals(transactionDTO.getTitle(), currentTransactionDTO.getTitle())
+					&& Objects.equals(transactionDTO.getType(), currentTransactionDTO.getType())
+					&& Objects.equals(transactionDTO.getAmount(), currentTransactionDTO.getAmount())
+					&& Objects.equals(transactionDTO.getCategory(), currentTransactionDTO.getCategory())
+					&& Objects.equals(transactionDTO.getTransactionDate(), currentTransactionDTO.getTransactionDate())) {
+				return "Current transaction already exists";
+			}
+		}
+		Transaction transaction = mapToTransaction(transactionDTO);
+		try {
+			transactionRepository.save(transaction);
+			return "Transaction updated successfully";
+		} catch (Exception e) {
+			return "Error updating transaction: " + e.getMessage();
+		}
+	}
+
+	private TransactionDTO mapToTransactionDTO(Transaction transaction) {
 		return TransactionDTO.builder()
 				.id(transaction.getId())
 				.title(transaction.getTitle())
@@ -55,4 +78,14 @@ public class TransactionService {
 				.build();
 	}
 
+	private Transaction mapToTransaction(TransactionDTO transactionDTO) {
+		return Transaction.builder()
+				.id(transactionDTO.getId())
+				.title(transactionDTO.getTitle())
+				.type(transactionDTO.getType())
+				.amount(transactionDTO.getAmount())
+				.category(transactionDTO.getCategory())
+				.transactionDate(transactionDTO.getTransactionDate())
+				.build();
+	}
 }

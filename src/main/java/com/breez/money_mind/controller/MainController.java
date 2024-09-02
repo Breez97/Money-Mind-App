@@ -17,6 +17,7 @@ public class MainController {
 		} else {
 			model.addAttribute("username", "Guest");
 		}
+
 		return "index";
 	}
 

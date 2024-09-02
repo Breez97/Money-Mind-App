@@ -24,6 +24,7 @@ public class UserController {
 		if (error != null) {
 			model.addAttribute("errorMessage", errorMessage);
 		}
+
 		return "login-page";
 	}
 

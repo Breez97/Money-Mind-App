@@ -1,0 +1,20 @@
+.features-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-family: 'Montserrat-Regular';
+    font-size: 16px;
+    color: white;
+    text-align: justify;
+    max-width: 890px;
+    align-self: center;
+}
+
+.features-list li {
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+.features-list li strong {
+    color: rgb(111, 206, 149);
+}

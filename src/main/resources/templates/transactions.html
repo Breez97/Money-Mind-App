@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/icon/money.ico">
     <link rel="stylesheet" href="/css/fonts.css">
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/css/containers.css">
+    <link rel="stylesheet" href="/css/text.css">
+    <link rel="stylesheet" href="/css/transactions.css">
+    <link rel="stylesheet" href="/css/modal-window.css">
     <title>MoneyMind</title>
 </head>
 <body>
@@ -40,31 +44,85 @@
     </div>
     <div class="content-container">
         <div class="title-text">Your transactions</div>
+        <div th:if="${message}"
+             class="alert-message"
+             th:classappend="${message == 'Current transaction already exists'} ? 'expense-color' : income-color">
+            <p th:text="${message}"></p>
+        </div>
         <input type="text" class="search-field" id="search-input" placeholder="Search">
 
         <div class="transactions-container">
             <div class="transaction-card" th:each="transaction : ${transactions}">
                 <input type="hidden" th:value="${transaction.id}">
                 <div class="transaction-header">
-                    <img th:src="@{/img/{category}.png(category=${transaction.category})}" alt="Category Icon" class="category-icon">
+                    <img th:src="@{/img/{category}.png(category=${transaction.category})}" class="category-icon">
                     <div class="transaction-title" th:text="${transaction.title}"
                          th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'"></div>
                 </div>
                 <div class="transaction-detail">
                     <div class="transaction-label"
-                         th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'">Amount:</div>
-                    <div th:text="'$' + ${transaction.amount}"></div>
+                         th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'">Amount:
+                    </div>
+                    <div th:text="(${transaction.type} == 'expense' ? '-' : '+') + '$' + ${transaction.amount}"></div>
                 </div>
                 <div class="transaction-detail">
                     <div class="transaction-label"
-                         th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'">Date:</div>
+                         th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'">Date:
+                    </div>
                     <div th:text="${transaction.transactionDate}"></div>
                 </div>
+                <button class="cta-button edit-button" data-toggle="modal" data-target="#editModal"
+                        th:attr="data-id=${transaction.id},
+                                 data-title=${transaction.title},
+                                 data-amount=${transaction.amount},
+                                 data-category=${transaction.category},
+                                 data-type=${transaction.type},
+                                 data-date=${transaction.transactionDate}">
+                    Edit
+                </button>
             </div>
+        </div>
+    </div>
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="header-modal">
+                <h2>Edit Transaction</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="editForm" method="post" action="/update-transaction">
+                <input type="hidden" id="edit-id" name="id">
+                <div class="modal-field">
+                    <label for="edit-title">Title:</label>
+                    <input type="text" id="edit-title" name="title">
+                </div>
+                <div class="modal-field">
+                    <label for="edit-amount">Amount:</label>
+                    <input type="number" id="edit-amount" name="amount" step="0.01" min="0.00">
+                </div>
+                <div class="modal-field">
+                    <label for="edit-type">Type:</label>
+                    <select id="edit-type" name="type">
+                        <option value="income">Income</option>
+                        <option value="expense">Expense</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label for="edit-category">Category:</label>
+                    <select id="edit-category" name="category">
+                    </select>
+                    <input type="hidden" id="current-category">
+                </div>
+                <div class="modal-field">
+                    <label for="edit-date">Date:</label>
+                    <input type="date" id="edit-date" name="transactionDate">
+                </div>
+                <button class="cta-button modal-button" type="submit">Save Changes</button>
+            </form>
         </div>
     </div>
 </div>
 <script src="/js/jquery.js"></script>
 <script src="/js/search.js"></script>
+<script src="/js/modal-window.js"></script>
 </body>
 </html>

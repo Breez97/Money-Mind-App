@@ -1,0 +1,114 @@
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.75);
+}
+
+.modal-content {
+    background-color: #1e1e1e;
+    margin: 10% auto;
+    padding: 20px;
+    border: 2px solid #292929;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: white;
+}
+
+.header-modal {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.header-modal > h2 {
+    font-size: 20px;
+    font-family: 'Montserrat-Bold';
+}
+
+.modal-button {
+    margin-left: 160px;
+}
+
+.close {
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.close:hover {
+    color: #ff3333;
+}
+
+.modal-field {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-field label {
+    font-family: 'Montserrat-Bold';
+    font-size: 16px;
+    color: rgb(111, 206, 149);
+    margin-bottom: 5px;
+}
+
+.modal-field input,
+.modal-field select {
+    padding: 10px;
+    border: 2px solid #292929;
+    border-radius: 8px;
+    font-family: 'Montserrat-Regular';
+    font-size: 16px;
+    color: white;
+    background-color: #292929;
+    transition: border-color 0.4s, box-shadow 0.4s;
+}
+
+.modal-field input:focus,
+.modal-field select:focus {
+    outline: none;
+    border-color: rgb(111, 206, 149);
+    box-shadow: 0 0 8px rgba(111, 206, 149, 0.6);
+}
+
+.modal-field input::placeholder {
+    color: rgba(184, 184, 184, 0.5);
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+.modal-footer button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-family: 'Montserrat-Bold';
+    color: white;
+    background-color: rgb(111, 206, 149);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.4s, transform 0.4s;
+}
+
+.modal-footer button:hover {
+    transform: scale(1.05);
+}
+
+.modal-footer button:active {
+    transform: scale(1.02);
+}

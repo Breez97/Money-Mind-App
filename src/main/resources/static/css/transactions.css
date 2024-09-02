@@ -1,0 +1,93 @@
+.transaction-card {
+    background-color: #292929;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    width: 250px;
+}
+
+.transaction-card:hover {
+    transform: translateY(-3px);
+}
+
+.transaction-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+}
+
+.category-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    filter: invert(100%);
+}
+
+.transaction-title {
+    color: rgb(111, 206, 149);
+    font-family: 'Montserrat-Bold';
+}
+
+.transaction-label {
+    font-weight: bold;
+    width: 120px;
+    color: rgb(111, 206, 149);
+}
+
+.transaction-detail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-family: 'Montserrat-Bold';
+    color: white;
+}
+
+.expense-color {
+    color: #ff3333;
+}
+
+.income-color {
+    color: rgb(111, 206, 149);
+}
+
+.no-transactions {
+    color: #ff3333;
+    font-size: 20px;
+    font-family: 'Montserrat-Bold';
+}
+
+.income-summary, .expense-summary {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    width: 45%;
+    background-color: #292929;
+    border-radius: 12px;
+}
+
+.summary-title {
+    font-family: 'Montserrat-Bold';
+    font-size: 24px;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.summary-amount {
+    font-family: 'Montserrat-Bold';
+    font-size: 36px;
+    color: rgb(111, 206, 149);
+}
+
+.alert-message {
+    font-family: 'Montserrat-Bold';
+    font-size: 20px;
+}
