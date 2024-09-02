@@ -28,10 +28,43 @@
             </a>
         </div>
     </div>
+    <div class="summary-container">
+        <div class="income-summary">
+            <div class="summary-title">Incomes</div>
+            <div class="summary-amount" th:text="${sumIncomes}">$0.00</div>
+        </div>
+        <div class="expense-summary">
+            <div class="summary-title">Expenses</div>
+            <div class="summary-amount" style="color: #ff3333;" th:text="${sumExpenses}">$0.00</div>
+        </div>
+    </div>
     <div class="content-container">
         <div class="title-text">Your transactions</div>
-        <input type="text" class="search-field" placeholder="Search">
+        <input type="text" class="search-field" id="search-input" placeholder="Search">
+
+        <div class="transactions-container">
+            <div class="transaction-card" th:each="transaction : ${transactions}">
+                <input type="hidden" th:value="${transaction.id}">
+                <div class="transaction-header">
+                    <img th:src="@{/img/{category}.png(category=${transaction.category})}" alt="Category Icon" class="category-icon">
+                    <div class="transaction-title" th:text="${transaction.title}"
+                         th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'"></div>
+                </div>
+                <div class="transaction-detail">
+                    <div class="transaction-label"
+                         th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'">Amount:</div>
+                    <div th:text="'$' + ${transaction.amount}"></div>
+                </div>
+                <div class="transaction-detail">
+                    <div class="transaction-label"
+                         th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'">Date:</div>
+                    <div th:text="${transaction.transactionDate}"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+<script src="/js/jquery.js"></script>
+<script src="/js/search.js"></script>
 </body>
 </html>

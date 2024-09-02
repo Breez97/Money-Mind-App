@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -20,5 +22,13 @@ public class Users {
 	private String username;
 	private String password;
 	private String name;
+
+	@ManyToMany
+	@JoinTable(
+			name = "user_transactions",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "transaction_id")
+	)
+	private List<Transaction> transactions;
 
 }

@@ -6,8 +6,6 @@ import com.breez.money_mind.model.dto.UsersDTO;
 import com.breez.money_mind.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,15 +28,6 @@ public class UserService {
 		Users user = mapToUsers(userDTO);
 		user.setPassword(encoder.encode(user.getPassword()));
 		return userRepository.save(user);
-	}
-
-	private UsersDTO mapToUsersDTO(Users user) {
-		return UsersDTO.builder()
-				.id(user.getId())
-				.name(user.getName())
-				.username(user.getUsername())
-				.password(user.getPassword())
-				.build();
 	}
 
 	private Users mapToUsers(UsersDTO userDTO) {
