@@ -26,9 +26,18 @@ public class TransactionController {
 		double sumExpenses = Math.round(transactionService.sumByType(transactions, "expense") * 100.0) / 100.0;
 		double sumIncomes = Math.round(transactionService.sumByType(transactions, "income") * 100.0) / 100.0;
 
+		if (transactions.isEmpty()) {
+			model.addAttribute("noTransactions", true);
+		} else {
+			model.addAttribute("noTransactions", false);
+		}
+		for (TransactionDTO transaction : transactions) {
+			String formattedAmount = String.format("%.2f", transaction.getAmount());
+			transaction.setFormattedAmount(formattedAmount);
+		}
 		model.addAttribute("transactions", transactions);
-		model.addAttribute("sumExpenses", "-$" + sumExpenses);
-		model.addAttribute("sumIncomes", "+$" + sumIncomes);
+		model.addAttribute("sumExpenses", "-$" + String.format("%.2f", sumExpenses));
+		model.addAttribute("sumIncomes", "+$" + String.format("%.2f", sumIncomes));
 
 		return "transactions";
 	}

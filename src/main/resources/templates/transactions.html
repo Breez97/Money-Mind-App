@@ -24,26 +24,30 @@
             <div class="header-text">
                 <a href="/subscriptions">Subscriptions</a>
             </div>
-            <div class="header-text">
-                <a href="/notifications">Notifications</a>
-            </div>
             <a class="header-logo" href="/profile">
                 <img src="/img/account.svg" alt="profile-logo">
             </a>
         </div>
     </div>
-    <div class="summary-container">
-        <div class="income-summary">
-            <div class="summary-title">Incomes</div>
-            <div class="summary-amount" th:text="${sumIncomes}">$0.00</div>
+    <div class="summary-info-container">
+        <div class="main-text">
+            Welcome to your transactions hub, the core of your financial management with MoneyMind. Here, you can
+            track and categorize all your expenses and income, giving you a clear picture of your financial
+            habits.
         </div>
-        <div class="expense-summary">
-            <div class="summary-title">Expenses</div>
-            <div class="summary-amount" style="color: #ff3333;" th:text="${sumExpenses}">$0.00</div>
+        <div class="summary-container">
+            <div class="income-summary">
+                <div class="summary-title">Incomes</div>
+                <div class="summary-amount" th:text="${sumIncomes}">$0.00</div>
+            </div>
+            <div class="expense-summary">
+                <div class="summary-title">Expenses</div>
+                <div class="summary-amount" style="color: #ff3333;" th:text="${sumExpenses}">$0.00</div>
+            </div>
         </div>
     </div>
     <div class="content-container">
-        <div class="title-text">Your transactions</div>
+        <div class="title-text">List of your transactions</div>
         <div th:if="${message}"
              class="alert-message"
              th:classappend="${message == 'Current transaction already exists'} ? 'expense-color' : income-color">
@@ -51,6 +55,7 @@
         </div>
         <input type="text" class="search-field" id="search-input" placeholder="Search">
         <button class="cta-button add-transaction-button">Add transaction</button>
+        <div th:if="${noTransactions}" class="no-transactions">No transactions</div>
 
         <div class="transactions-container">
             <div class="transaction-card" th:each="transaction : ${transactions}">
@@ -63,9 +68,10 @@
                 </div>
                 <div class="transaction-detail">
                     <div class="transaction-label"
-                         th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'">Amount:
+                         th:classappend="${transaction.type} == 'expense' ? 'expense-color' : 'income-color'">
+                        Amount:
                     </div>
-                    <div th:text="(${transaction.type} == 'expense' ? '-' : '+') + '$' + ${transaction.amount}"></div>
+                    <div th:text="(${transaction.type} == 'expense' ? '-' : '+') + '$' + ${transaction.formattedAmount}"></div>
                 </div>
                 <div class="transaction-detail">
                     <div class="transaction-label"
@@ -76,7 +82,7 @@
                 <button class="cta-button edit-button"
                         th:attr="data-id=${transaction.id},
                                  data-title=${transaction.title},
-                                 data-amount=${transaction.amount},
+                                 data-amount=${transaction.formattedAmount},
                                  data-category=${transaction.category},
                                  data-type=${transaction.type},
                                  data-date=${transaction.transactionDate}">

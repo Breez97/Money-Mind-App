@@ -7,14 +7,11 @@ import java.time.LocalDate;
 
 @Data
 @Builder
-public class TransactionDTO {
+public class SubscriptionDTO {
 
 	private Integer id;
 	private String title;
-	private String type;
 	private double amount;
-	private String formattedAmount;
-	private String category;
-	private LocalDate transactionDate;
+	private LocalDate nextPayment;
 
 }

@@ -13,25 +13,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "transactions")
-public class Transaction {
+@Table(name = "subscriptions")
+public class Subscription {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String title;
-	// expense, income
-	private String type;
 	private double amount;
-	// expense: supermarkets, clothes, fast_food, transaction, others
-	// income: transaction, atm, others
-	private String category;
-	private LocalDate transactionDate;
+	private LocalDate nextPayment;
 
 	@ManyToOne
 	@JoinTable(
-			name = "user_transactions",
-			joinColumns = @JoinColumn(name = "transaction_id"),
+			name = "user_subscriptions",
+			joinColumns = @JoinColumn(name = "subscription_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
 	private Users users;

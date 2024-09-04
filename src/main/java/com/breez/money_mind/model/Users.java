@@ -26,4 +26,7 @@ public class Users {
 	@OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Transaction> transactions;
 
+	@OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Subscription> subscriptions;
+
 }

@@ -123,14 +123,4 @@ public class TransactionService {
 				.build();
 	}
 
-	private Transaction mapToTransaction(TransactionDTO transactionDTO) {
-		return Transaction.builder()
-				.id(transactionDTO.getId())
-				.title(transactionDTO.getTitle())
-				.type(transactionDTO.getType())
-				.amount(transactionDTO.getAmount())
-				.category(transactionDTO.getCategory())
-				.transactionDate(transactionDTO.getTransactionDate())
-				.build();
-	}
 }

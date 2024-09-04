@@ -61,6 +61,7 @@
     color: #ff3333;
     font-size: 20px;
     font-family: 'Montserrat-Bold';
+    margin: 30px;
 }
 
 .income-summary, .expense-summary {
@@ -93,7 +94,7 @@
     margin: -15px;
 }
 
-.add-button {
+.add-transaction-button {
     margin-top: 10px;
 }
 
