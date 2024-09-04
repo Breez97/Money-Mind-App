@@ -1,11 +1,14 @@
 package com.breez.money_mind.service;
 
 import com.breez.money_mind.exceptions.UserAlreadyExistsException;
+import com.breez.money_mind.model.UserPrincipal;
 import com.breez.money_mind.model.Users;
 import com.breez.money_mind.model.dto.UsersDTO;
 import com.breez.money_mind.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +31,15 @@ public class UserService {
 		Users user = mapToUsers(userDTO);
 		user.setPassword(encoder.encode(user.getPassword()));
 		return userRepository.save(user);
+	}
+
+	public Users getCurrentUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if (authentication != null && authentication.isAuthenticated()) {
+			UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+			return userRepository.findByUsername(userPrincipal.getUsername());
+		}
+		throw new RuntimeException("User is not authenticated");
 	}
 
 	private Users mapToUsers(UsersDTO userDTO) {

@@ -29,7 +29,12 @@ public class Transaction {
 	private String category;
 	private LocalDate transactionDate;
 
-	@ManyToMany(mappedBy = "transactions")
-	private List<Users> users;
+	@ManyToOne
+	@JoinTable(
+			name = "user_transactions",
+			joinColumns = @JoinColumn(name = "transaction_id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id")
+	)
+	private Users users;
 
 }

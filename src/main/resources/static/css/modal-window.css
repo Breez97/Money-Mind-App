@@ -35,6 +35,11 @@
     font-family: 'Montserrat-Bold';
 }
 
+.button-delete-container > h2 {
+    font-size: 20px;
+    font-family: 'Montserrat-Bold';
+}
+
 .modal-button {
     margin-left: 160px;
 }

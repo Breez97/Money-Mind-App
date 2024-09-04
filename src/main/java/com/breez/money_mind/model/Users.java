@@ -23,12 +23,7 @@ public class Users {
 	private String password;
 	private String name;
 
-	@ManyToMany
-	@JoinTable(
-			name = "user_transactions",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "transaction_id")
-	)
+	@OneToMany(mappedBy = "users", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<Transaction> transactions;
 
 }

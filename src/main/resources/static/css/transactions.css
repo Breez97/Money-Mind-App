@@ -20,7 +20,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    justify-content: center;
+    justify-content: space-around;
 }
 
 .category-icon {
@@ -90,4 +90,25 @@
 .alert-message {
     font-family: 'Montserrat-Bold';
     font-size: 20px;
+    margin: -15px;
+}
+
+.add-button {
+    margin-top: 10px;
+}
+
+.delete-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    display: inline-block;
+    transition: color 0.3s;
+}
+
+.delete-button:hover {
+    color: #ff3333;
 }

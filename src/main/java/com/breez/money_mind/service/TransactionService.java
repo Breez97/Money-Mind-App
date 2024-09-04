@@ -23,6 +23,8 @@ public class TransactionService {
 	private TransactionRepository transactionRepository;
 	@Autowired
 	private UserRepository userRepository;
+	@Autowired
+	private UserService userService;
 
 	public List<TransactionDTO> findAllTransactions() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -37,34 +39,77 @@ public class TransactionService {
 		throw new RuntimeException("User is not authenticated");
 	}
 
-	public double sumByType(List<TransactionDTO> transactions, String type) {
-		return transactions.stream()
-				.filter(transaction -> transaction.getType().equals(type))
-				.mapToDouble(transaction -> transaction.getAmount())
-				.sum();
+	public String addTransaction(TransactionDTO transactionDTO) {
+		List<TransactionDTO> allTransactions = findAllTransactions();
+		if (checkTransactionExistenceInDB(transactionDTO, allTransactions)) {
+			return "Current transaction already exists";
+		}
+
+		Transaction transaction = Transaction.builder()
+				.title(transactionDTO.getTitle())
+				.type(transactionDTO.getType())
+				.amount(transactionDTO.getAmount())
+				.category(transactionDTO.getCategory())
+				.transactionDate(transactionDTO.getTransactionDate())
+				.users(userService.getCurrentUser())
+				.build();
+		try {
+			transactionRepository.save(transaction);
+			return "Transaction saved successfully";
+		} catch (Exception e) {
+			return "Error saving transaction: " + e.getMessage();
+		}
 	}
 
-	public String updateTransactionById(TransactionDTO transactionDTO) {
+	public String updateTransaction(TransactionDTO transactionDTO) {
 		List<TransactionDTO> allTransactions = findAllTransactions();
 		if (!allTransactions.removeIf(transaction -> transaction.getId().equals(transactionDTO.getId()))) {
-			return "Transaction not found";
+			throw new TransactionNotFoundException("Transaction not found");
 		}
-		for (TransactionDTO currentTransactionDTO : allTransactions) {
-			if (Objects.equals(transactionDTO.getTitle(), currentTransactionDTO.getTitle())
-					&& Objects.equals(transactionDTO.getType(), currentTransactionDTO.getType())
-					&& Objects.equals(transactionDTO.getAmount(), currentTransactionDTO.getAmount())
-					&& Objects.equals(transactionDTO.getCategory(), currentTransactionDTO.getCategory())
-					&& Objects.equals(transactionDTO.getTransactionDate(), currentTransactionDTO.getTransactionDate())) {
-				return "Current transaction already exists";
-			}
+		if (checkTransactionExistenceInDB(transactionDTO, allTransactions)) {
+			return "Current transaction already exists";
 		}
-		Transaction transaction = mapToTransaction(transactionDTO);
+
+		Transaction transaction = Transaction.builder()
+				.id(transactionDTO.getId())
+				.title(transactionDTO.getTitle())
+				.type(transactionDTO.getType())
+				.amount(transactionDTO.getAmount())
+				.category(transactionDTO.getCategory())
+				.transactionDate(transactionDTO.getTransactionDate())
+				.users(userService.getCurrentUser())
+				.build();
 		try {
 			transactionRepository.save(transaction);
 			return "Transaction updated successfully";
 		} catch (Exception e) {
 			return "Error updating transaction: " + e.getMessage();
 		}
+	}
+
+	public String deleteTransaction(Integer id) {
+		transactionRepository.deleteById(id);
+		return "Transaction deleted successfully";
+	}
+
+	public boolean checkTransactionExistenceInDB(TransactionDTO transactionDTO, List<TransactionDTO> allTransactions) {
+		for (TransactionDTO currentTransactionDTO : allTransactions) {
+			if (Objects.equals(transactionDTO.getTitle(), currentTransactionDTO.getTitle())
+					&& Objects.equals(transactionDTO.getType(), currentTransactionDTO.getType())
+					&& Objects.equals(transactionDTO.getAmount(), currentTransactionDTO.getAmount())
+					&& Objects.equals(transactionDTO.getCategory(), currentTransactionDTO.getCategory())
+					&& Objects.equals(transactionDTO.getTransactionDate(), currentTransactionDTO.getTransactionDate())) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public double sumByType(List<TransactionDTO> transactions, String type) {
+		return transactions.stream()
+				.filter(transaction -> transaction.getType().equals(type))
+				.mapToDouble(transaction -> transaction.getAmount())
+				.sum();
 	}
 
 	private TransactionDTO mapToTransactionDTO(Transaction transaction) {
