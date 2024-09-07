@@ -84,3 +84,10 @@ a:not(.cta-button):hover {
     height: 100px;
     filter: invert(100%);
 }
+
+.category-icon {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    filter: invert(100%);
+}

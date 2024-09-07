@@ -6,7 +6,7 @@ $(document).ready(function() {
            type: 'POST',
            data: $(this).serialize(),
            success: function(response) {
-               location.reload();
+               window.location.href = "login-page";
            },
            error: function(xhr) {
                let errors = xhr.responseJSON;

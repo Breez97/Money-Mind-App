@@ -22,7 +22,7 @@ public class Transaction {
 	private String title;
 	// expense, income
 	private String type;
-	private double amount;
+	private Double amount;
 	// expense: supermarkets, clothes, fast_food, transaction, others
 	// income: transaction, atm, others
 	private String category;

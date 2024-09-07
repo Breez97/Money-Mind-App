@@ -1,0 +1,61 @@
+.notification {
+    display: flex;
+    flex-direction: row;
+    margin: 10px 0;
+    background-color: #292929;
+    padding: 20px;
+    border-radius: 12px;
+    align-items: center;
+    justify-content: space-around;
+    width: 85%;
+}
+
+.notification-title {
+    font-family: 'Montserrat-Bold';
+    font-size: 18px;
+    color: white;
+    margin-bottom: 10px;
+    margin: 0 7px;
+    width: 100px;
+}
+
+.notification input[type="text"] {
+    width: 300px;
+    padding: 10px 20px;
+    border: 2px solid white;
+    border-radius: 16px;
+    font-family: 'Montserrat-Regular';
+    font-size: 16px;
+    color: white;
+    background-color: #292929;
+    transition: border-color 0.4s, box-shadow 0.4s;
+}
+
+.notification input[type="text"]:focus {
+    outline: none;
+    border-color: rgb(111, 206, 149);
+    box-shadow: 0 0 8px rgba(111, 206, 149, 0.6);
+}
+
+.notification input[type="text"]::placeholder {
+    color: rgba(184, 184, 184, 0.5);
+    font-family: 'Montserrat-Regular';
+    font-size: 16px;
+}
+
+.notification-button-save {
+    margin: 0 10px;
+}
+
+.notification-button-enable {
+    margin: 0 10px;
+    width: 120px;
+}
+
+.notification-enabled {
+    background-color: rgb(111, 206, 149);
+}
+
+.notification-disabled {
+    background-color: #ff3333;
+}

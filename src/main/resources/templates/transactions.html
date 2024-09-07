@@ -15,6 +15,7 @@
 </head>
 <body>
 <div class="main-container">
+
     <div class="header-container">
         <div class="header-text-container">
             <div class="title-text"><a href="/">Money Mind</a></div>
@@ -29,6 +30,7 @@
             </a>
         </div>
     </div>
+
     <div class="summary-info-container">
         <div class="main-text">
             Welcome to your transactions hub, the core of your financial management with MoneyMind. Here, you can
@@ -46,6 +48,7 @@
             </div>
         </div>
     </div>
+
     <div class="content-container">
         <div class="title-text">List of your transactions</div>
         <div th:if="${message}">
@@ -54,7 +57,6 @@
         <input type="text" class="search-field" id="search-input" placeholder="Search">
         <button class="cta-button add-transaction-button">Add transaction</button>
         <div th:if="${noTransactions}" class="no-transactions">No transactions</div>
-
         <div class="transactions-container">
             <div class="transaction-card" th:each="transaction : ${transactions}">
                 <input type="hidden" th:value="${transaction.id}">
@@ -89,6 +91,7 @@
             </div>
         </div>
     </div>
+
     <div id="addModal" class="modal">
         <div class="modal-content">
             <div class="header-modal">
@@ -125,6 +128,7 @@
             </form>
         </div>
     </div>
+
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="header-modal">
@@ -163,6 +167,7 @@
             </form>
         </div>
     </div>
+
     <div id="deleteModal" class="modal">
         <div class="modal-content">
             <div class="header-modal">
@@ -176,9 +181,10 @@
             </div>
         </div>
     </div>
+
 </div>
 <script src="/js/jquery.js"></script>
-<script src="/js/search.js"></script>
+<script src="/js/transactions-search.js"></script>
 <script src="/js/modal-window.js"></script>
 <script src="/js/transactions-error-handler.js"></script>
 </body>

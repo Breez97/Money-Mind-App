@@ -9,10 +9,13 @@
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/containers.css">
     <link rel="stylesheet" href="/css/text.css">
+    <link rel="stylesheet" href="/css/notifications.css">
+    <link rel="stylesheet" href="/css/subscriptions.css">
     <title>Subscriptions</title>
 </head>
 <body>
 <div class="main-container">
+
     <div class="header-container">
         <div class="header-text-container">
             <div class="title-text"><a href="/">Money Mind</a></div>
@@ -27,12 +30,70 @@
             </a>
         </div>
     </div>
-    <div class="content-container">
-        <div class="notifications-container">
 
+    <div class="summary-info-container">
+        <div class="main-text">
+            Welcome to your subscriptions hub, the place where you can interact with all of your subscriptions. If
+            it is necessary you could connect your Telegram or email to get all the notifications about your
+            financial status and subscriptions for different services.
         </div>
-        <div class="title-text">Your subscriptions</div>
+        <div class="notification">
+            <img src="/img/tg_icon.png" class="category-icon" alt="tg_icon">
+            <div class="notification-title">Telegram</div>
+            <input type="text" th:value="${notification.telegram}" placeholder="Your telegram (e.g. @breez97)">
+            <button id="saveTelegram" class="cta-button notification-button-save">Save</button>
+            <button id="enableTelegram" class="cta-button notification-button-enable"
+                    th:classappend="${notification.telegramEnabled} ? 'notification-enabled' : 'notification-disabled'"
+                    th:text="${notification.telegramEnabled} ? 'Enabled' : 'Disabled'">
+            </button>
+        </div>
+        <div class="notification">
+            <img src="/img/email_icon.png" class="category-icon" alt="email_icon">
+            <div class="notification-title">Email</div>
+            <input type="text" th:value="${notification.email}" placeholder="Your email (e.g. ilya66401@gmail.com)">
+            <button id="saveEmail" class="cta-button notification-button-save">Save</button>
+            <button id="enableEmail" class="cta-button notification-button-enable"
+                    th:classappend="${notification.emailEnabled} ? 'notification-enabled' : 'notification-disabled'"
+                    th:text="${notification.emailEnabled} ? 'Enabled' : 'Disabled'">
+            </button>
+        </div>
     </div>
+
+    <div class="content-container">
+        <div class="title-text">List of your subscriptions</div>
+        <input type="text" class="search-field" id="search-input" placeholder="Search">
+        <button class="cta-button add-subscription-button">Add subscription</button>
+        <div class="table-header-container">
+            <div class="main-text subscription-header-text">Title</div>
+            <div class="main-text subscription-header-text">Amount</div>
+            <div class="main-text subscription-header-text">Frequency</div>
+            <div class="main-text subscription-header-text">Next Payment</div>
+        </div>
+        <div th:if="${noSubscriptions}" class="no-subscriptions">No subscriptions</div>
+        <div class="subscription-container">
+            <div class="subscription-card" th:each="subscription : ${subscriptions}">
+                <div class="subscription-info">
+                    <input type="hidden" th:value="${subscription.id}">
+                    <div class="subscription-buttons">
+                        <img src="/img/edit_icon.png" class="category-icon subscription-icon left-icon-button"
+                             alt="tg_icon">
+                    </div>
+                    <div class="subscription-text" th:text="${subscription.title}">Spirit Fitness</div>
+                    <div class="subscription-text" th:text="'$' + ${subscription.formattedAmount}">$18.00</div>
+                    <div class="subscription-text" th:text="${subscription.frequency}">Monthly</div>
+                    <div class="subscription-text" th:text="${subscription.nextPayment}">2024-08-09</div>
+                    <div class="subscription-buttons">
+                        <img src="/img/delete_icon.png" class="category-icon subscription-icon right-icon-button"
+                             alt="tg_icon">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>
+<script src="/js/jquery.js"></script>
+<script src="/js/notifications.js"></script>
+<script src="/js/subscriptions-search.js"></script>
 </body>
 </html>

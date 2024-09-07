@@ -40,6 +40,7 @@ public class SubscriptionService {
 				.id(subscription.getId())
 				.title(subscription.getTitle())
 				.amount(subscription.getAmount())
+				.frequency(subscription.getFrequency())
 				.nextPayment(subscription.getNextPayment())
 				.build();
 	}

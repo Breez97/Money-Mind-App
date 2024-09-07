@@ -16,8 +16,11 @@
     color: white;
     line-height: 1.6;
     margin: 0 auto;
-    margin-top: 20px;
     text-align: center;
+}
+
+.description-text {
+    margin-top: 20px;
 }
 
 .error-text {

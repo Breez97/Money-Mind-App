@@ -23,13 +23,6 @@
     justify-content: space-around;
 }
 
-.category-icon {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    filter: invert(100%);
-}
-
 .transaction-title {
     color: rgb(111, 206, 149);
     font-family: 'Montserrat-Bold';

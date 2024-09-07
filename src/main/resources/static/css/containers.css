@@ -92,3 +92,61 @@
     justify-content: space-around;
     height: 200px;
 }
+
+.subscriptions-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.notification-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    background-color: #1e1e1e;
+    height: 100px;
+}
+
+.table-header-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 75%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: #292929;
+    height: 80px;
+    border-radius: 10px;
+}
+
+.subscription-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.subscription-icon {
+    width: 35px;
+    height: 35px;
+}
+
+.subscription-buttons {
+    width: 60px;
+}
+
+.left-icon-button {
+    position: relative;
+    right: -75px;
+}
+
+.right-icon-button {
+    position: relative;
+    left: -75px;
+}

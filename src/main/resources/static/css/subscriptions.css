@@ -1,0 +1,54 @@
+.subscription-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 92%;
+    background-color: #1e1e1e;
+    border-radius: 10px;
+    margin: 10px 0;
+}
+
+.subscription-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-height: 60px;
+    padding: 7px 0;
+    text-align: center;
+}
+
+.subscription-header-text {
+    width: 150px;
+    font-family: 'Montserrat-Bold';
+}
+
+.subscription-text {
+    font-family: 'Montserrat-Bold';
+    color: rgb(111, 206, 149);
+    font-size: 18px;
+    width: 150px;
+}
+
+.subscription-icon {
+    cursor: poiner;
+    transition: 0.4s;
+}
+
+.subscription-icon:hover {
+    filter: invert(68%) sepia(56%) saturate(342%) hue-rotate(65deg) brightness(94%) contrast(92%);
+    transition: 0.4s;
+}
+
+.add-subscription-button {
+    margin-top: 10px;
+}
+
+.no-subscriptions {
+    color: #ff3333;
+    font-size: 20px;
+    font-family: 'Montserrat-Bold';
+    margin: 30px;
+}

@@ -6,29 +6,26 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "subscriptions")
-public class Subscription {
+@Table(name = "notifications")
+public class Notification {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String title;
-	private Double amount;
-	// daily, weekly, monthly, annually
-	private String frequency;
-	private LocalDate nextPayment;
+	private String telegram;
+	private Boolean telegramEnabled;
+	private String email;
+	private Boolean emailEnabled;
 
-	@ManyToOne
+	@OneToOne
 	@JoinTable(
-			name = "user_subscriptions",
-			joinColumns = @JoinColumn(name = "subscription_id"),
+			name = "user_notifications",
+			joinColumns = @JoinColumn(name = "notification_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
 	private Users user;
