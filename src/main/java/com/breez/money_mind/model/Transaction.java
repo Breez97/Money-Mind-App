@@ -34,6 +34,6 @@ public class Transaction {
 			joinColumns = @JoinColumn(name = "transaction_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
-	private Users users;
+	private Users user;
 
 }

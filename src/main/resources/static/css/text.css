@@ -26,3 +26,9 @@
     color: red;
     text-align: center;
 }
+
+.error-messages {
+    color: #ff3333;
+    margin-bottom: 10px;
+    font-family: 'Montserrat-Bold';
+}

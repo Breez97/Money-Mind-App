@@ -31,7 +31,7 @@ public class TransactionService {
 		if (authentication.isAuthenticated()) {
 			UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 			Users user = userRepository.findByUsername(userPrincipal.getUsername());
-			List<Transaction> transactions = transactionRepository.findByUsersId(user.getId());
+			List<Transaction> transactions = transactionRepository.findByUserId(user.getId());
 			return transactions.stream()
 					.map(obj -> mapToTransactionDTO(obj))
 					.collect(Collectors.toList());
@@ -51,7 +51,7 @@ public class TransactionService {
 				.amount(transactionDTO.getAmount())
 				.category(transactionDTO.getCategory())
 				.transactionDate(transactionDTO.getTransactionDate())
-				.users(userService.getCurrentUser())
+				.user(userService.getCurrentUser())
 				.build();
 		try {
 			transactionRepository.save(transaction);
@@ -77,7 +77,7 @@ public class TransactionService {
 				.amount(transactionDTO.getAmount())
 				.category(transactionDTO.getCategory())
 				.transactionDate(transactionDTO.getTransactionDate())
-				.users(userService.getCurrentUser())
+				.user(userService.getCurrentUser())
 				.build();
 		try {
 			transactionRepository.save(transaction);

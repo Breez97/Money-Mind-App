@@ -1,15 +1,18 @@
 package com.breez.money_mind.controller;
 
-import com.breez.money_mind.exceptions.UserAlreadyExistsException;
 import com.breez.money_mind.model.dto.UsersDTO;
 import com.breez.money_mind.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class UserController {
@@ -39,13 +42,24 @@ public class UserController {
 	}
 
 	@PostMapping("/register")
-	public String processRegister(@ModelAttribute UsersDTO userDTO, Model model) {
+	@ResponseBody
+	public ResponseEntity<?> registerNewUser(@Valid @ModelAttribute("userDTO") UsersDTO usersDTO,
+											 BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errors = new HashMap<>();
+			bindingResult.getFieldErrors().forEach(error ->
+					errors.put(error.getField(), error.getDefaultMessage())
+			);
+			return ResponseEntity.badRequest().body(errors);
+		}
+
 		try {
-			userService.saveUser(userDTO);
-			return "login-page";
-		} catch (UserAlreadyExistsException e) {
-			model.addAttribute("errorMessage", e.getMessage());
-			return "register-page";
+			String result = userService.saveUser(usersDTO);
+			return ResponseEntity.ok(result);
+		} catch (Exception e) {
+			Map<String, String> error = new HashMap<>();
+			error.put("error", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
 		}
 	}
 

@@ -2,17 +2,19 @@ package com.breez.money_mind.controller;
 
 import com.breez.money_mind.model.dto.TransactionDTO;
 import com.breez.money_mind.service.TransactionService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class TransactionController {
@@ -43,47 +45,62 @@ public class TransactionController {
 	}
 
 	@PostMapping("/add-transaction")
-	public String addTransaction(@RequestParam("title") String title,
-								 @RequestParam("type") String type,
-								 @RequestParam("amount") double amount,
-								 @RequestParam("category") String category,
-								 @RequestParam("transactionDate") LocalDate transactionDate,
-								 RedirectAttributes redirectAttributes) {
-		TransactionDTO transactionDTO = TransactionDTO.builder()
-				.title(title)
-				.type(type)
-				.amount(amount)
-				.category(category)
-				.transactionDate(transactionDate)
-				.build();
+	@ResponseBody
+	public ResponseEntity<?> addTransaction(@Valid @ModelAttribute("transaction") TransactionDTO transactionDTO,
+											BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errors = new HashMap<>();
+			bindingResult.getFieldErrors().forEach(error ->
+					errors.put(error.getField(), error.getDefaultMessage())
+			);
+			System.out.println(errors);
+			return ResponseEntity.badRequest().body(errors);
+		}
 
-		String result = transactionService.addTransaction(transactionDTO);
-		redirectAttributes.addFlashAttribute("message", result);
-
-		return "redirect:/transactions";
+		try {
+			String result = transactionService.addTransaction(transactionDTO);
+			return ResponseEntity.ok(result);
+		} catch (Exception e) {
+			Map<String, String> error = new HashMap<>();
+			error.put("error", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+		}
 	}
 
 	@PostMapping("/update-transaction")
-	public String updateTransaction(@RequestParam("id") Integer id,
-									@RequestParam("title") String title,
-									@RequestParam("type") String type,
-									@RequestParam("amount") double amount,
-									@RequestParam("category") String category,
-									@RequestParam("transactionDate") LocalDate transactionDate,
-									RedirectAttributes redirectAttributes) {
-		TransactionDTO transactionDTO = TransactionDTO.builder()
-				.id(id)
-				.title(title)
-				.type(type)
-				.amount(amount)
-				.category(category)
-				.transactionDate(transactionDate)
-				.build();
+	@ResponseBody
+	public ResponseEntity<?> updateTransaction(@Valid @ModelAttribute("transactionDTO") TransactionDTO transactionDTO,
+											   BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errors = new HashMap<>();
+			bindingResult.getFieldErrors().forEach(error ->
+					errors.put(error.getField(), error.getDefaultMessage())
+			);
+			return ResponseEntity.badRequest().body(errors);
+		}
 
-		String result = transactionService.updateTransaction(transactionDTO);
-		redirectAttributes.addFlashAttribute("message", result);
+		try {
+			String result = transactionService.updateTransaction(transactionDTO);
+			String errorUpdate = "Current transaction already exists";
+			if (result.equals(errorUpdate)) {
+				Map<String, String> errors = new HashMap<>();
+				errors.put("error", errorUpdate);
+				return ResponseEntity.badRequest().body(errors);
+			}
+			return ResponseEntity.ok(result);
+		} catch (Exception e) {
+			Map<String, String> error = new HashMap<>();
+			error.put("error", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+		}
+	}
 
-		return "redirect:/transactions";
+	private ResponseEntity<?> errorHandler(BindingResult bindingResult) {
+		Map<String, String> errors = new HashMap<>();
+		bindingResult.getFieldErrors().forEach(error ->
+				errors.put(error.getField(), error.getDefaultMessage())
+		);
+		return ResponseEntity.badRequest().body(errors);
 	}
 
 	@GetMapping("/delete-transaction/{id}")

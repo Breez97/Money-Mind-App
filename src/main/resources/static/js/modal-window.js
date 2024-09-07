@@ -39,6 +39,8 @@ $(document).ready(function() {
         $('#addModal').hide();
         $('#editModal').hide();
         $('#deleteModal').hide();
+        $('#addErrorMessages').html('');
+        $('#editErrorMessages').html('');
     });
 
     $('#noButton').on('click', function() {

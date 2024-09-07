@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/css/containers.css">
     <link rel="stylesheet" href="/css/text.css">
     <link rel="stylesheet" href="/css/login-page.css">
-    <title>Login</title>
+    <title>Register</title>
 </head>
 <body>
 <div class="main-container">
@@ -35,17 +35,17 @@
                 Already have an account?<br><br>
                 <a href="/login" class="cta-button">Login</a>
             </div>
-            <form action="/register" method="post" class="login-form">
-                <input type="text" name="name" class="login-field" placeholder="Name" required>
-                <input type="text" name="username" class="login-field" placeholder="Username" required>
-                <input type="password" name="password" class="login-field" placeholder="Password" required>
+            <div id="registerErrorMessages" class="error-messages"></div>
+            <form id="registerForm" class="login-form">
+                <input type="text" name="name" class="login-field" placeholder="Name">
+                <input type="text" name="username" class="login-field" placeholder="Username">
+                <input type="password" name="password" class="login-field" placeholder="Password">
                 <button type="submit" class="cta-button">Register</button>
             </form>
-            <div th:if="${errorMessage}" class="error-text">
-                <p th:text="${errorMessage}"></p>
-            </div>
         </div>
     </div>
 </div>
+<script src="/js/jquery.js"></script>
+<script src="/js/login-register-error-handler.js"></script>
 </body>
 </html>

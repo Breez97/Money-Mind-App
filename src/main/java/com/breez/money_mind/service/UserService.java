@@ -24,14 +24,28 @@ public class UserService {
 	@Autowired
 	private JWTService jwtService;
 
-	public Users saveUser(UsersDTO userDTO) {
+	public String saveUser(UsersDTO userDTO) {
 		if (userRepository.findByUsername(userDTO.getUsername()) != null) {
-			throw new UserAlreadyExistsException("User with username " + userDTO.getUsername() + " already exists.");
+			return "User with username " + userDTO.getUsername() + " already exists";
 		}
 		Users user = mapToUsers(userDTO);
 		user.setPassword(encoder.encode(user.getPassword()));
-		return userRepository.save(user);
+		try {
+			userRepository.save(user);
+			return "User saved successfully";
+		} catch (Exception e) {
+			return "Error saving user " + e.getMessage();
+		}
 	}
+
+//	public Users saveUser(UsersDTO userDTO) {
+//		if (userRepository.findByUsername(userDTO.getUsername()) != null) {
+//			throw new UserAlreadyExistsException("User with username " + userDTO.getUsername() + " already exists.");
+//		}
+//		Users user = mapToUsers(userDTO);
+//		user.setPassword(encoder.encode(user.getPassword()));
+//		return userRepository.save(user);
+//	}
 
 	public Users getCurrentUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

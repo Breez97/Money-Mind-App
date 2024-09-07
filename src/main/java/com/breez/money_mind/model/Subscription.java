@@ -29,6 +29,6 @@ public class Subscription {
 			joinColumns = @JoinColumn(name = "subscription_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id")
 	)
-	private Users users;
+	private Users user;
 
 }

@@ -27,7 +27,7 @@ public class SubscriptionService {
 		if (authentication.isAuthenticated()) {
 			UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 			Users user = userRepository.findByUsername(userPrincipal.getUsername());
-			List<Subscription> transactions = subscriptionRepository.findByUsersId(user.getId());
+			List<Subscription> transactions = subscriptionRepository.findByUserId(user.getId());
 			return transactions.stream()
 					.map(obj -> mapToSubscriptionDTO(obj))
 					.collect(Collectors.toList());

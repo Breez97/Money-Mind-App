@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="/css/text.css">
     <link rel="stylesheet" href="/css/modal-window.css">
     <link rel="stylesheet" href="/css/transactions.css">
-    <title>MoneyMind</title>
+    <title>Transactions</title>
 </head>
 <body>
 <div class="main-container">
@@ -48,9 +48,7 @@
     </div>
     <div class="content-container">
         <div class="title-text">List of your transactions</div>
-        <div th:if="${message}"
-             class="alert-message"
-             th:classappend="${message == 'Current transaction already exists'} ? 'expense-color' : income-color">
+        <div th:if="${message}">
             <p th:text="${message}"></p>
         </div>
         <input type="text" class="search-field" id="search-input" placeholder="Search">
@@ -97,14 +95,15 @@
                 <h2>Add Transaction</h2>
                 <span class="close">&times;</span>
             </div>
-            <form id="addForm" method="post" action="/add-transaction">
+            <div id="addErrorMessages" class="error-messages"></div>
+            <form id="addForm" th:object="${transaction}">
                 <div class="modal-field">
                     <label for="add-title">Title:</label>
                     <input type="text" id="add-title" name="title">
                 </div>
                 <div class="modal-field">
                     <label for="add-amount">Amount:</label>
-                    <input type="number" id="add-amount" name="amount" step="0.01" min="0.00">
+                    <input type="number" id="add-amount" name="amount" value="0.00" step="0.01">
                 </div>
                 <div class="modal-field">
                     <label for="add-type">Type:</label>
@@ -132,7 +131,8 @@
                 <h2>Edit Transaction</h2>
                 <span class="close">&times;</span>
             </div>
-            <form id="editForm" method="post" action="/update-transaction">
+            <div id="editErrorMessages" class="error-messages"></div>
+            <form id="editForm" th:object="${transaction}">
                 <input type="hidden" id="edit-id" name="id">
                 <div class="modal-field">
                     <label for="edit-title">Title:</label>
@@ -140,7 +140,7 @@
                 </div>
                 <div class="modal-field">
                     <label for="edit-amount">Amount:</label>
-                    <input type="number" id="edit-amount" name="amount" step="0.01" min="0.00">
+                    <input type="number" id="edit-amount" name="amount" value="0.00" step="0.01">
                 </div>
                 <div class="modal-field">
                     <label for="edit-type">Type:</label>
@@ -180,5 +180,6 @@
 <script src="/js/jquery.js"></script>
 <script src="/js/search.js"></script>
 <script src="/js/modal-window.js"></script>
+<script src="/js/transactions-error-handler.js"></script>
 </body>
 </html>
