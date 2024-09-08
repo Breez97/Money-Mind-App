@@ -9,18 +9,17 @@ $(document).ready(function() {
         FillCategories('add', type);
     });
 
-    $('.edit-button').on('click', function() {
+    $('.transactions-container').on('click', '.edit-button', function() {
         $('#edit-category').empty();
 
-        let button = $(this);
-        $('#edit-id').val(button.data('id'));
-        $('#edit-title').val(button.data('title'));
-        $('#edit-amount').val(button.data('amount'));
-        $('#edit-type').val(button.data('type'));
-        $('#current-category').val(button.data('category'));
-        $('#edit-date').val(button.data('date'));
+        $('#edit-id').val($(this).data('id'));
+        $('#edit-title').val($(this).data('title'));
+        $('#edit-amount').val($(this).data('amount'));
+        $('#edit-type').val($(this).data('type'));
+        $('#current-category').val($(this).data('category'));
+        $('#edit-date').val($(this).data('date'));
 
-        FillCategories('edit', button.data('type'));
+        FillCategories('edit', $(this).data('type'));
         $('#editModal').show();
     });
 
@@ -30,8 +29,8 @@ $(document).ready(function() {
     });
 
     $('.delete-button').on('click', function() {
-        const link = `/delete-transaction/${$(this).data('id')}`;
-        $('#hrefDelete').attr('href', link);
+        const id = $(this).data('id');
+        $('#confirmDeleteButton').data('id', id);
         $('#deleteModal').show();
     });
 
@@ -43,7 +42,7 @@ $(document).ready(function() {
         $('#editErrorMessages').html('');
     });
 
-    $('#noButton').on('click', function() {
+    $('#cancelDeleteButton').on('click', function() {
         $('#deleteModal').hide();
     });
 });

@@ -1,5 +1,6 @@
 package com.breez.money_mind.model.dto;
 
+import com.breez.money_mind.validation.CustomDateValid;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +22,7 @@ public class TransactionDTO {
 	private String formattedAmount;
 	@NotEmpty(message = "Transaction category can't be empty")
 	private String category;
+	@CustomDateValid(message = "Invalid transaction date format, it can't be empty and use MM/dd/yyyy")
 	@NotNull(message = "Transaction date can't be empty")
-	@PastOrPresent(message = "Transaction date can't be in the future")
-	private LocalDate transactionDate;
+	private String transactionDate;
 }

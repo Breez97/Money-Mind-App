@@ -38,15 +38,6 @@ public class UserService {
 		}
 	}
 
-//	public Users saveUser(UsersDTO userDTO) {
-//		if (userRepository.findByUsername(userDTO.getUsername()) != null) {
-//			throw new UserAlreadyExistsException("User with username " + userDTO.getUsername() + " already exists.");
-//		}
-//		Users user = mapToUsers(userDTO);
-//		user.setPassword(encoder.encode(user.getPassword()));
-//		return userRepository.save(user);
-//	}
-
 	public Users getCurrentUser() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication != null && authentication.isAuthenticated()) {

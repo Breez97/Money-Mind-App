@@ -1,17 +1,15 @@
 package com.breez.money_mind.service;
 
 import com.breez.money_mind.model.Subscription;
-import com.breez.money_mind.model.UserPrincipal;
 import com.breez.money_mind.model.Users;
 import com.breez.money_mind.model.dto.SubscriptionDTO;
 import com.breez.money_mind.repository.SubscriptionRepository;
 import com.breez.money_mind.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,17 +20,44 @@ public class SubscriptionService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public List<SubscriptionDTO> findAllSubscriptions() {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication.isAuthenticated()) {
-			UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-			Users user = userRepository.findByUsername(userPrincipal.getUsername());
-			List<Subscription> transactions = subscriptionRepository.findByUserId(user.getId());
-			return transactions.stream()
-					.map(obj -> mapToSubscriptionDTO(obj))
-					.collect(Collectors.toList());
+	public List<SubscriptionDTO> findAllSubscriptions(Users currentUser) {
+		List<Subscription> transactions = subscriptionRepository.findByUserId(currentUser.getId());
+		return transactions.stream()
+				.map(obj -> mapToSubscriptionDTO(obj))
+				.collect(Collectors.toList());
+	}
+
+	public String addSubscription(SubscriptionDTO subscriptionDTO, Users currentUser) {
+		List<SubscriptionDTO> allSubscriptions = findAllSubscriptions(currentUser);
+		if (checkSubscriptionExistenceIdDB(subscriptionDTO, allSubscriptions)) {
+			return "Current subscription already exists";
 		}
-		throw new RuntimeException("User is not authenticated");
+
+		Subscription subscription = Subscription.builder()
+				.title(subscriptionDTO.getTitle())
+				.amount(subscriptionDTO.getAmount())
+				.frequency(subscriptionDTO.getFrequency())
+				.nextPayment(subscriptionDTO.getNextPayment())
+				.user(currentUser)
+				.build();
+		try {
+			subscriptionRepository.save(subscription);
+			return "Subscription saves successfully";
+		} catch (Exception e) {
+			return "Error saving subscription: " + e.getMessage();
+		}
+	}
+
+	private boolean checkSubscriptionExistenceIdDB(SubscriptionDTO subscriptionDTO, List<SubscriptionDTO> allSubscriptions) {
+		for (SubscriptionDTO currentSubscriptionDTO : allSubscriptions) {
+			if (Objects.equals(subscriptionDTO.getTitle(), currentSubscriptionDTO.getTitle())
+					&& Objects.equals(subscriptionDTO.getAmount(), currentSubscriptionDTO.getAmount())
+					&& Objects.equals(subscriptionDTO.getFrequency(), currentSubscriptionDTO.getFrequency())
+					&& Objects.equals(subscriptionDTO.getNextPayment(), currentSubscriptionDTO.getNextPayment())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private SubscriptionDTO mapToSubscriptionDTO(Subscription subscription) {
@@ -44,5 +69,4 @@ public class SubscriptionService {
 				.nextPayment(subscription.getNextPayment())
 				.build();
 	}
-
 }

@@ -51,9 +51,6 @@
 
     <div class="content-container">
         <div class="title-text">List of your transactions</div>
-        <div th:if="${message}">
-            <p th:text="${message}"></p>
-        </div>
         <input type="text" class="search-field" id="search-input" placeholder="Search">
         <button class="cta-button add-transaction-button">Add transaction</button>
         <div th:if="${noTransactions}" class="no-transactions">No transactions</div>
@@ -95,7 +92,7 @@
     <div id="addModal" class="modal">
         <div class="modal-content">
             <div class="header-modal">
-                <h2>Add Transaction</h2>
+                <h2>Add transaction</h2>
                 <span class="close">&times;</span>
             </div>
             <div id="addErrorMessages" class="error-messages"></div>
@@ -124,7 +121,7 @@
                     <label for="add-date">Date:</label>
                     <input type="date" id="add-date" name="transactionDate">
                 </div>
-                <button class="cta-button modal-button" type="submit">Save Changes</button>
+                <button class="cta-button modal-button" type="submit">Save transaction</button>
             </form>
         </div>
     </div>
@@ -132,7 +129,7 @@
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="header-modal">
-                <h2>Edit Transaction</h2>
+                <h2>Edit transaction</h2>
                 <span class="close">&times;</span>
             </div>
             <div id="editErrorMessages" class="error-messages"></div>
@@ -163,7 +160,7 @@
                     <label for="edit-date">Date:</label>
                     <input type="date" id="edit-date" name="transactionDate">
                 </div>
-                <button class="cta-button modal-button" type="submit">Save Changes</button>
+                <button class="cta-button modal-button" type="submit">Save changes</button>
             </form>
         </div>
     </div>
@@ -174,18 +171,19 @@
                 <h2>Delete Transaction</h2>
                 <span class="close">&times;</span>
             </div>
+            <div id="deleteErrorMessages" class="error-messages"></div>
             <div class="button-delete-container">
-                <h2>Are you sure want to delete this transaction?</h2>
-                <a class="cta-button" id="hrefDelete">Yes</a>
-                <button class="cta-button" id="noButton">No</button>
+                <h2>Are you sure you want to delete this transaction?</h2>
+                <button class="cta-button" id="confirmDeleteButton">Yes</button>
+                <button class="cta-button" id="cancelDeleteButton">No</button>
             </div>
         </div>
     </div>
 
 </div>
 <script src="/js/jquery.js"></script>
-<script src="/js/transactions-search.js"></script>
-<script src="/js/modal-window.js"></script>
-<script src="/js/transactions-error-handler.js"></script>
+<script src="/js/transactions/transactions-modal-window.js"></script>
+<script src="/js/transactions/transactions-handler.js"></script>
+<script src="/js/transactions/transactions-search.js"></script>
 </body>
 </html>

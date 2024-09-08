@@ -6,7 +6,6 @@ $(document).ready(function() {
             type: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-                $('#addModal').hide();
                 location.reload();
             },
             error: function(xhr) {
@@ -22,12 +21,14 @@ $(document).ready(function() {
 
     $('#editForm').submit(function(e) {
         e.preventDefault();
+        let oldAmount = parseFloat($(this).find('[name="amount"]').val());
+        let oldType = $(this).find('[name="type"]').val();
+
         $.ajax({
             url: '/update-transaction',
             type: 'POST',
             data: $(this).serialize(),
             success: function(response) {
-                $('#editModal').hide();
                 location.reload();
             },
             error: function(xhr) {
@@ -37,6 +38,34 @@ $(document).ready(function() {
                     errorMessages += errors[field] + '<br>';
                 }
                 $('#editErrorMessages').html(errorMessages);
+            }
+        });
+    });
+
+    $(document).on('click', '.delete-button', function() {
+        const id = $(this).data('id');
+        $('#confirmDeleteButton').data('id', id);
+        $('#deleteModal').show();
+    });
+
+    $('#confirmDeleteButton').on('click', function() {
+        const id = $(this).data('id');
+        const type = $(this).data('type');
+        const amount = $(this).data('amount');
+
+        $.ajax({
+            url: `/delete-transaction/${id}`,
+            type: 'GET',
+            success: function(response) {
+                location.reload();
+            },
+            error: function(xhr) {
+                let errors = xhr.responseJSON;
+                let errorMessages = '';
+                for (let field in errors) {
+                    errorMessages += errors[field] + '<br>';
+                }
+                $('#deleteErrorMessages').html(errorMessages);
             }
         });
     });

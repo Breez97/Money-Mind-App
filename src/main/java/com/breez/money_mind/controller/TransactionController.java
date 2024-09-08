@@ -1,7 +1,9 @@
 package com.breez.money_mind.controller;
 
+import com.breez.money_mind.model.Users;
 import com.breez.money_mind.model.dto.TransactionDTO;
 import com.breez.money_mind.service.TransactionService;
+import com.breez.money_mind.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.List;
@@ -21,10 +22,13 @@ public class TransactionController {
 
 	@Autowired
 	private TransactionService transactionService;
+	@Autowired
+	private UserService userService;
 
 	@GetMapping("/transactions")
 	public String getTransactions(Model model) {
-		List<TransactionDTO> transactions = transactionService.findAllTransactions();
+		Users currentUser = userService.getCurrentUser();
+		List<TransactionDTO> transactions = transactionService.findAllTransactions(currentUser);
 		double sumExpenses = Math.round(transactionService.sumByType(transactions, "expense") * 100.0) / 100.0;
 		double sumIncomes = Math.round(transactionService.sumByType(transactions, "income") * 100.0) / 100.0;
 
@@ -53,12 +57,27 @@ public class TransactionController {
 			bindingResult.getFieldErrors().forEach(error ->
 					errors.put(error.getField(), error.getDefaultMessage())
 			);
-			System.out.println(errors);
 			return ResponseEntity.badRequest().body(errors);
 		}
 
 		try {
-			String result = transactionService.addTransaction(transactionDTO);
+			Users user = userService.getCurrentUser();
+			String result = transactionService.addTransaction(transactionDTO, user);
+
+			String errorDate = "Date must be in past";
+			if (result.equals(errorDate)) {
+				Map<String, String> errors = new HashMap<>();
+				errors.put("error", errorDate);
+				return ResponseEntity.badRequest().body(errors);
+			}
+
+			String errorUpdate = "Current transaction already exists";
+			if (result.equals(errorUpdate)) {
+				Map<String, String> errors = new HashMap<>();
+				errors.put("error", errorUpdate);
+				return ResponseEntity.badRequest().body(errors);
+			}
+
 			return ResponseEntity.ok(result);
 		} catch (Exception e) {
 			Map<String, String> error = new HashMap<>();
@@ -80,7 +99,16 @@ public class TransactionController {
 		}
 
 		try {
-			String result = transactionService.updateTransaction(transactionDTO);
+			Users user = userService.getCurrentUser();
+			String result = transactionService.updateTransaction(transactionDTO, user);
+			
+			String errorDate = "Date must be in past";
+			if (result.equals(errorDate)) {
+				Map<String, String> errors = new HashMap<>();
+				errors.put("error", errorDate);
+				return ResponseEntity.badRequest().body(errors);
+			}
+
 			String errorUpdate = "Current transaction already exists";
 			if (result.equals(errorUpdate)) {
 				Map<String, String> errors = new HashMap<>();
@@ -95,21 +123,18 @@ public class TransactionController {
 		}
 	}
 
-	private ResponseEntity<?> errorHandler(BindingResult bindingResult) {
-		Map<String, String> errors = new HashMap<>();
-		bindingResult.getFieldErrors().forEach(error ->
-				errors.put(error.getField(), error.getDefaultMessage())
-		);
-		return ResponseEntity.badRequest().body(errors);
-	}
-
 	@GetMapping("/delete-transaction/{id}")
-	public String deleteTransaction(@PathVariable("id") Integer id,
-									RedirectAttributes redirectAttributes) {
-		String result = transactionService.deleteTransaction(id);
-		redirectAttributes.addFlashAttribute("message", result);
-
-		return "redirect:/transactions";
+	public ResponseEntity<Map<String, String>> deleteTransaction(@PathVariable("id") Integer id) {
+		try {
+			transactionService.deleteTransaction(id);
+			Map<String, String> response = new HashMap<>();
+			response.put("message", "Transaction deleted successfully");
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			Map<String, String> response = new HashMap<>();
+			response.put("error", "Failed to delete transaction: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+		}
 	}
 
 }

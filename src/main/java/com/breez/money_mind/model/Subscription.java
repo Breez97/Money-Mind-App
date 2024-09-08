@@ -21,7 +21,7 @@ public class Subscription {
 	private Integer id;
 	private String title;
 	private Double amount;
-	// daily, weekly, monthly, annually
+	// Daily, Weekly, Monthly, Annually
 	private String frequency;
 	private LocalDate nextPayment;
 
