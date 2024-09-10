@@ -101,7 +101,7 @@ public class TransactionController {
 		try {
 			Users user = userService.getCurrentUser();
 			String result = transactionService.updateTransaction(transactionDTO, user);
-			
+
 			String errorDate = "Date must be in past";
 			if (result.equals(errorDate)) {
 				Map<String, String> errors = new HashMap<>();

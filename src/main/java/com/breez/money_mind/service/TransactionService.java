@@ -90,7 +90,6 @@ public class TransactionService {
 	}
 
 	public void deleteTransaction(Integer id) {
-
 		transactionRepository.deleteById(id);
 	}
 

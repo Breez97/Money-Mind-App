@@ -1,5 +1,6 @@
 package com.breez.money_mind.model.dto;
 
+import com.breez.money_mind.validation.CustomDateValid;
 import jakarta.validation.constraints.*;
 import lombok.Builder;
 import lombok.Data;
@@ -19,8 +20,8 @@ public class SubscriptionDTO {
 	private String formattedAmount;
 	@NotEmpty(message = "Subscription frequency shouldn't be empty")
 	private String frequency;
+	@CustomDateValid(message = "Invalid subscription date format, it can't be empty and use MM/dd/yyyy")
 	@NotNull(message = "Subscription date can't be empty")
-	@Future(message = "Subscription date should be in future")
-	private LocalDate nextPayment;
+	private String nextPayment;
 
 }

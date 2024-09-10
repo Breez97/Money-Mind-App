@@ -9,7 +9,7 @@ $(document).ready(function() {
         FillCategories('add', type);
     });
 
-    $('.transactions-container').on('click', '.edit-button', function() {
+    $('.edit-button').on('click', function() {
         $('#edit-category').empty();
 
         $('#edit-id').val($(this).data('id'));

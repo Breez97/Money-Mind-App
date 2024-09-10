@@ -13,10 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -50,6 +47,7 @@ public class SubscriptionController {
 
 		model.addAttribute("subscriptions", subscriptions);
 		model.addAttribute("notification", notification);
+
 		return "subscriptions";
 	}
 
@@ -67,6 +65,14 @@ public class SubscriptionController {
 		try {
 			Users user = userService.getCurrentUser();
 			String result = subscriptionService.addSubscription(subscriptionDTO, user);
+
+			String errorDate = "Date must be in future (at least the next day)";
+			if (result.equals(errorDate)) {
+				Map<String, String> errors = new HashMap<>();
+				errors.put("error", errorDate);
+				return ResponseEntity.badRequest().body(errors);
+			}
+
 			String errorAdd = "Current subscription already exists";
 			if (result.equals(errorAdd)) {
 				Map<String, String> errors = new HashMap<>();
@@ -78,6 +84,55 @@ public class SubscriptionController {
 			Map<String, String> error = new HashMap<>();
 			error.put("error", e.getMessage());
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+		}
+	}
+
+	@PostMapping("/update-subscription")
+	public ResponseEntity<?> updateSubscription(@Valid @ModelAttribute("subscription") SubscriptionDTO subscriptionDTO,
+												BindingResult bindingResult) {
+		if (bindingResult.hasErrors()) {
+			Map<String, String> errors = new HashMap<>();
+			bindingResult.getFieldErrors().forEach(error ->
+					errors.put(error.getField(), error.getDefaultMessage()));
+			return ResponseEntity.badRequest().body(errors);
+		}
+
+		try {
+			Users user = userService.getCurrentUser();
+			String result = subscriptionService.updateSubscription(subscriptionDTO, user);
+
+			String errorDate = "Date must be in future (at least the next day)";
+			if (result.equals(errorDate)) {
+				Map<String, String> errors = new HashMap<>();
+				errors.put("error", errorDate);
+				return ResponseEntity.badRequest().body(errors);
+			}
+
+			String errorAdd = "Current subscription already exists";
+			if (result.equals(errorAdd)) {
+				Map<String, String> errors = new HashMap<>();
+				errors.put("error", errorAdd);
+				return ResponseEntity.badRequest().body(errors);
+			}
+			return ResponseEntity.ok(result);
+		} catch (Exception e) {
+			Map<String, String> error = new HashMap<>();
+			error.put("error", e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+		}
+	}
+
+	@GetMapping("/delete-subscription/{id}")
+	public ResponseEntity<Map<String, String>> deleteSubscription(@PathVariable("id") Integer id) {
+		try {
+			subscriptionService.deleteSubscription(id);
+			Map<String, String> response = new HashMap<>();
+			response.put("message", "Subscription deleted successfully");
+			return ResponseEntity.ok(response);
+		} catch (Exception e) {
+			Map<String, String> response = new HashMap<>();
+			response.put("error", "Failed to delete subscription: " + e.getMessage());
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
 		}
 	}
 

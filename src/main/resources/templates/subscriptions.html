@@ -76,7 +76,8 @@
                 <div class="subscription-info">
                     <input type="hidden" th:value="${subscription.id}">
                     <div class="subscription-buttons">
-                        <img src="/img/edit_icon.png" class="category-icon subscription-icon left-icon-button"
+                        <img src="/img/edit_icon.png"
+                             class="category-icon subscription-icon left-icon-button edit-button"
                              alt="tg_icon">
                     </div>
                     <div class="subscription-text" th:text="${subscription.title}">Spirit Fitness</div>
@@ -84,7 +85,8 @@
                     <div class="subscription-text" th:text="${subscription.frequency}">Monthly</div>
                     <div class="subscription-text" th:text="${subscription.nextPayment}">2024-08-09</div>
                     <div class="subscription-buttons">
-                        <img src="/img/delete_icon.png" class="category-icon subscription-icon right-icon-button"
+                        <img src="/img/delete_icon.png"
+                             class="category-icon subscription-icon right-icon-button delete-button"
                              alt="tg_icon">
                     </div>
                 </div>
@@ -123,6 +125,57 @@
                 </div>
                 <button class="cta-button modal-button" type="submit">Save subscription</button>
             </form>
+        </div>
+    </div>
+
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="header-modal">
+                <h2>Edit subscription</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div id="editErrorMessages" class="error-messages"></div>
+            <form id="editForm" th:object="${subscription}">
+                <input type="hidden" id="edit-id" name="id">
+                <div class="modal-field">
+                    <label for="edit-title">Title:</label>
+                    <input type="text" id="edit-title" name="title">
+                </div>
+                <div class="modal-field">
+                    <label for="edit-frequency">Frequency:</label>
+                    <select id="edit-frequency" name="frequency">
+                        <option value="Daily">Daily</option>
+                        <option value="Weekly">Weekly</option>
+                        <option value="Monthly">Monthly</option>
+                        <option value="Annually">Annually</option>
+                    </select>
+                </div>
+                <div class="modal-field">
+                    <label for="edit-amount">Amount:</label>
+                    <input type="number" id="edit-amount" name="amount" value="0.00" step="0.01">
+                </div>
+                <div class="modal-field">
+                    <label for="edit-date">Date:</label>
+                    <input type="date" id="edit-date" name="nextPayment">
+                </div>
+                <button class="cta-button modal-button" type="submit">Save subscription</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <div class="header-modal">
+                <h2>Delete subscription</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div id="deleteErrorMessages" class="error-messages"></div>
+            <input type="hidden" id="deleteId">
+            <div class="button-delete-container">
+                <h2>Are you sure you want to delete this subscription?</h2>
+                <button class="cta-button" id="confirmDeleteButton">Yes</button>
+                <button class="cta-button" id="cancelDeleteButton">No</button>
+            </div>
         </div>
     </div>
 

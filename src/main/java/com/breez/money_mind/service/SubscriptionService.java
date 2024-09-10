@@ -1,19 +1,25 @@
 package com.breez.money_mind.service;
 
+import com.breez.money_mind.exceptions.TransactionNotFoundException;
 import com.breez.money_mind.model.Subscription;
 import com.breez.money_mind.model.Users;
 import com.breez.money_mind.model.dto.SubscriptionDTO;
 import com.breez.money_mind.repository.SubscriptionRepository;
 import com.breez.money_mind.repository.UserRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
 public class SubscriptionService {
+
+	private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 	@Autowired
 	private SubscriptionRepository subscriptionRepository;
@@ -33,11 +39,17 @@ public class SubscriptionService {
 			return "Current subscription already exists";
 		}
 
+		LocalDate parsedDate = LocalDate.parse(subscriptionDTO.getNextPayment(), FORMATTER);
+		LocalDate nextDay = LocalDate.now().plusDays(1);
+		if (parsedDate.isBefore(nextDay)) {
+			return "Date must be in future (at least the next day)";
+		}
+
 		Subscription subscription = Subscription.builder()
 				.title(subscriptionDTO.getTitle())
 				.amount(subscriptionDTO.getAmount())
 				.frequency(subscriptionDTO.getFrequency())
-				.nextPayment(subscriptionDTO.getNextPayment())
+				.nextPayment(parsedDate)
 				.user(currentUser)
 				.build();
 		try {
@@ -46,6 +58,41 @@ public class SubscriptionService {
 		} catch (Exception e) {
 			return "Error saving subscription: " + e.getMessage();
 		}
+	}
+
+	public String updateSubscription(@Valid SubscriptionDTO subscriptionDTO, Users currentUser) {
+		List<SubscriptionDTO> allSubscriptions = findAllSubscriptions(currentUser);
+		if (!allSubscriptions.removeIf(subscription -> subscription.getId().equals(subscriptionDTO.getId()))) {
+			throw new TransactionNotFoundException("Subscription not found");
+		}
+		if (checkSubscriptionExistenceIdDB(subscriptionDTO, allSubscriptions)) {
+			return "Current subscription already exists";
+		}
+
+		LocalDate parsedDate = LocalDate.parse(subscriptionDTO.getNextPayment(), FORMATTER);
+		LocalDate nextDay = LocalDate.now().plusDays(1);
+		if (parsedDate.isBefore(nextDay)) {
+			return "Date must be in future (at least the next day)";
+		}
+
+		Subscription subscription = Subscription.builder()
+				.id(subscriptionDTO.getId())
+				.title(subscriptionDTO.getTitle())
+				.amount(subscriptionDTO.getAmount())
+				.frequency(subscriptionDTO.getFrequency())
+				.nextPayment(parsedDate)
+				.user(currentUser)
+				.build();
+		try {
+			subscriptionRepository.save(subscription);
+			return "Transaction updated successfully";
+		} catch (Exception e) {
+			return "Error updating transaction: " + e.getMessage();
+		}
+	}
+
+	public void deleteSubscription(Integer id) {
+		subscriptionRepository.deleteById(id);
 	}
 
 	private boolean checkSubscriptionExistenceIdDB(SubscriptionDTO subscriptionDTO, List<SubscriptionDTO> allSubscriptions) {
@@ -66,7 +113,7 @@ public class SubscriptionService {
 				.title(subscription.getTitle())
 				.amount(subscription.getAmount())
 				.frequency(subscription.getFrequency())
-				.nextPayment(subscription.getNextPayment())
+				.nextPayment(subscription.getNextPayment().toString())
 				.build();
 	}
 }
