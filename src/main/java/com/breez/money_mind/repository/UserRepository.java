@@ -9,6 +9,4 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
 
 	Users findByUsername(String username);
 
-	boolean existsByUsernameAndIdNot(String username, Integer id);
-
 }

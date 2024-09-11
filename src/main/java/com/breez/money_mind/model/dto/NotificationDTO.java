@@ -8,9 +8,7 @@ import lombok.Data;
 public class NotificationDTO {
 
 	private Integer id;
-	private String telegram;
+	private Long chatId;
 	private Boolean telegramEnabled;
-	private String email;
-	private Boolean emailEnabled;
 
 }

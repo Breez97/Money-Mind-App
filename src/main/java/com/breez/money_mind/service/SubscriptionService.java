@@ -5,7 +5,8 @@ import com.breez.money_mind.model.Users;
 import com.breez.money_mind.model.dto.SubscriptionDTO;
 import com.breez.money_mind.repository.SubscriptionRepository;
 import com.breez.money_mind.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -109,6 +110,12 @@ public class SubscriptionService {
 		subscriptionRepository.deleteById(id);
 	}
 
+	@Transactional(readOnly = true)
+	public List<Subscription> getSubscriptionsForTomorrow() {
+		LocalDate tomorrow = LocalDate.now().plusDays(1);
+		return subscriptionRepository.findByNextPayment(tomorrow);
+	}
+
 	private boolean checkSubscriptionExistenceIdDB(SubscriptionDTO subscriptionDTO, List<SubscriptionDTO> allSubscriptions) {
 		for (SubscriptionDTO currentSubscriptionDTO : allSubscriptions) {
 			if (Objects.equals(subscriptionDTO.getTitle(), currentSubscriptionDTO.getTitle())
@@ -130,4 +137,35 @@ public class SubscriptionService {
 				.nextPayment(subscription.getNextPayment().toString())
 				.build();
 	}
+
+	@Scheduled(cron = "0 00 00 * * ?")
+	@Transactional
+	public void updateNextPayment() {
+		List<Subscription> subscriptions = subscriptionRepository.findAll();
+		LocalDate today = LocalDate.now();
+		for (Subscription subscription : subscriptions) {
+			LocalDate newNextPayment = calculateNextPaymentDate(subscription.getNextPayment(), subscription.getFrequency(), today);
+			subscription.setNextPayment(newNextPayment);
+		}
+		subscriptionRepository.saveAll(subscriptions);
+	}
+
+	private LocalDate calculateNextPaymentDate(LocalDate currentNextPayment, String frequency, LocalDate today) {
+		if (frequency == null || currentNextPayment == null) {
+			return currentNextPayment;
+		}
+		switch (frequency) {
+			case "Daily":
+				return currentNextPayment.plusDays(1);
+			case "Weekly":
+				return currentNextPayment.plusWeeks(1);
+			case "Monthly":
+				return currentNextPayment.plusMonths(1);
+			case "Annually":
+				return currentNextPayment.plusYears(1);
+			default:
+				return currentNextPayment;
+		}
+	}
+
 }

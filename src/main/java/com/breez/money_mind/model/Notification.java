@@ -17,10 +17,8 @@ public class Notification {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	private String telegram;
+	private Long chatId;
 	private Boolean telegramEnabled;
-	private String email;
-	private Boolean emailEnabled;
 
 	@OneToOne
 	@JoinTable(

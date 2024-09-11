@@ -4,7 +4,7 @@ import com.breez.money_mind.model.Transaction;
 import com.breez.money_mind.model.Users;
 import com.breez.money_mind.model.dto.TransactionDTO;
 import com.breez.money_mind.repository.TransactionRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

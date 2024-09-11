@@ -1,10 +1,12 @@
 package com.breez.money_mind.service;
 
+import com.breez.money_mind.model.Notification;
 import com.breez.money_mind.model.UserPrincipal;
 import com.breez.money_mind.model.Users;
 import com.breez.money_mind.model.dto.UsersDTO;
+import com.breez.money_mind.repository.NotificationRepository;
 import com.breez.money_mind.repository.UserRepository;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +30,8 @@ public class UserService {
 	private BCryptPasswordEncoder encoder;
 	@Autowired
 	private AuthenticationManager authenticationManager;
+	@Autowired
+	private NotificationRepository notificationRepository;
 
 	private List<UsersDTO> findAllUsers() {
 		List<Users> allUsers = userRepository.findAll();
@@ -53,6 +57,12 @@ public class UserService {
 		Users user = mapToUsers(userDTO);
 		try {
 			userRepository.save(user);
+			Notification notification = Notification.builder()
+					.telegramEnabled(false)
+					.chatId((long) 0)
+					.user(user)
+					.build();
+			notificationRepository.save(notification);
 			return "User saved successfully";
 		} catch (Exception e) {
 			return "Error saving user " + e.getMessage();
@@ -128,4 +138,5 @@ public class UserService {
 				.password(users.getPassword())
 				.build();
 	}
+
 }

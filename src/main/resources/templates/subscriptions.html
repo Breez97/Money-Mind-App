@@ -35,27 +35,17 @@
     <div class="summary-info-container">
         <div class="main-text">
             Welcome to your subscriptions hub, the place where you can interact with all of your subscriptions. If
-            it is necessary you could connect your Telegram or email to get all the notifications about your
-            financial status and subscriptions for different services.
+            it is necessary you could connect your Telegram to get all the notifications about your subscriptions for
+            different services.<br>If you want to get notifications through
+            Telegram Bot, please start a conversation with him by this <a
+                href="http://t.me/money_mind_notifications_bot">link</a>.
         </div>
         <div class="notification">
             <img src="/img/tg_icon.png" class="category-icon" alt="tg_icon">
             <div class="notification-title">Telegram</div>
-            <input type="text" th:value="${notification.telegram}" placeholder="Your telegram (e.g. @breez97)">
-            <button id="saveTelegram" class="cta-button notification-button-save">Save</button>
             <button id="enableTelegram" class="cta-button notification-button-enable"
                     th:classappend="${notification.telegramEnabled} ? 'notification-enabled' : 'notification-disabled'"
                     th:text="${notification.telegramEnabled} ? 'Enabled' : 'Disabled'">
-            </button>
-        </div>
-        <div class="notification">
-            <img src="/img/email_icon.png" class="category-icon" alt="email_icon">
-            <div class="notification-title">Email</div>
-            <input type="text" th:value="${notification.email}" placeholder="Your email (e.g. ilya66401@gmail.com)">
-            <button id="saveEmail" class="cta-button notification-button-save">Save</button>
-            <button id="enableEmail" class="cta-button notification-button-enable"
-                    th:classappend="${notification.emailEnabled} ? 'notification-enabled' : 'notification-disabled'"
-                    th:text="${notification.emailEnabled} ? 'Enabled' : 'Disabled'">
             </button>
         </div>
     </div>
