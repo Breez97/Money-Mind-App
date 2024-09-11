@@ -1,16 +1,18 @@
 package com.breez.money_mind.service;
 
-import com.breez.money_mind.exceptions.TransactionNotFoundException;
 import com.breez.money_mind.model.Transaction;
 import com.breez.money_mind.model.Users;
 import com.breez.money_mind.model.dto.TransactionDTO;
 import com.breez.money_mind.repository.TransactionRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -29,16 +31,21 @@ public class TransactionService {
 				.collect(Collectors.toList());
 	}
 
-	public String addTransaction(TransactionDTO transactionDTO, Users currentUser) {
+	@Transactional
+	public Map<String, String> addTransaction(TransactionDTO transactionDTO, Users currentUser) {
+		Map<String, String> response = new HashMap<>();
 		List<TransactionDTO> allTransactions = findAllTransactions(currentUser);
+
 		if (checkTransactionExistenceInDB(transactionDTO, allTransactions)) {
-			return "Current transaction already exists";
+			response.put("error", "Current transaction already exists");
+			return response;
 		}
 
 		LocalDate parsedDate = LocalDate.parse(transactionDTO.getTransactionDate(), FORMATTER);
 		LocalDate currentDate = LocalDate.now();
 		if (!parsedDate.isBefore(currentDate)) {
-			return "Date must be in past";
+			response.put("error", "Date must be in past");
+			return response;
 		}
 
 		Transaction transaction = Transaction.builder()
@@ -50,26 +57,32 @@ public class TransactionService {
 				.user(currentUser)
 				.build();
 		try {
-			Transaction addedTransaction = transactionRepository.save(transaction);
-			return addedTransaction.getId().toString();
+			transactionRepository.save(transaction);
+			response.put("message", "Transaction saved successfully");
 		} catch (Exception e) {
-			return "Error saving transaction: " + e.getMessage();
+			response.put("error", "Error saving transaction: " + e.getMessage());
 		}
+		return response;
 	}
 
-	public String updateTransaction(TransactionDTO transactionDTO, Users currentUser) {
+	@Transactional
+	public Map<String, String> updateTransaction(TransactionDTO transactionDTO, Users currentUser) {
+		Map<String, String> response = new HashMap<>();
 		List<TransactionDTO> allTransactions = findAllTransactions(currentUser);
 		if (!allTransactions.removeIf(transaction -> transaction.getId().equals(transactionDTO.getId()))) {
-			throw new TransactionNotFoundException("Transaction not found");
+			throw new RuntimeException("Transaction not found");
 		}
+
 		if (checkTransactionExistenceInDB(transactionDTO, allTransactions)) {
-			return "Current transaction already exists";
+			response.put("error", "Current transaction already exists");
+			return response;
 		}
 
 		LocalDate parsedDate = LocalDate.parse(transactionDTO.getTransactionDate(), FORMATTER);
 		LocalDate currentDate = LocalDate.now();
 		if (!parsedDate.isBefore(currentDate)) {
-			return "Date must be in past";
+			response.put("error", "Date must be in past");
+			return response;
 		}
 
 		Transaction transaction = Transaction.builder()
@@ -78,17 +91,19 @@ public class TransactionService {
 				.type(transactionDTO.getType())
 				.amount(transactionDTO.getAmount())
 				.category(transactionDTO.getCategory())
-				.transactionDate(parsedDate)
+				.transactionDate(LocalDate.parse(transactionDTO.getTransactionDate(), FORMATTER))
 				.user(currentUser)
 				.build();
 		try {
 			transactionRepository.save(transaction);
-			return "Transaction updated successfully";
+			response.put("message", "Transaction updated successfully");
 		} catch (Exception e) {
-			return "Error updating transaction: " + e.getMessage();
+			response.put("error", "Error saving transaction: " + e.getMessage());
 		}
+		return response;
 	}
 
+	@Transactional
 	public void deleteTransaction(Integer id) {
 		transactionRepository.deleteById(id);
 	}

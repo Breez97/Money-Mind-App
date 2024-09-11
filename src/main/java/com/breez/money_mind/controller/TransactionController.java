@@ -62,23 +62,11 @@ public class TransactionController {
 
 		try {
 			Users user = userService.getCurrentUser();
-			String result = transactionService.addTransaction(transactionDTO, user);
-
-			String errorDate = "Date must be in past";
-			if (result.equals(errorDate)) {
-				Map<String, String> errors = new HashMap<>();
-				errors.put("error", errorDate);
-				return ResponseEntity.badRequest().body(errors);
+			Map<String, String> response = transactionService.addTransaction(transactionDTO, user);
+			if (response.containsKey("error")) {
+				return ResponseEntity.badRequest().body(response);
 			}
-
-			String errorUpdate = "Current transaction already exists";
-			if (result.equals(errorUpdate)) {
-				Map<String, String> errors = new HashMap<>();
-				errors.put("error", errorUpdate);
-				return ResponseEntity.badRequest().body(errors);
-			}
-
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			Map<String, String> error = new HashMap<>();
 			error.put("error", e.getMessage());
@@ -100,22 +88,11 @@ public class TransactionController {
 
 		try {
 			Users user = userService.getCurrentUser();
-			String result = transactionService.updateTransaction(transactionDTO, user);
-
-			String errorDate = "Date must be in past";
-			if (result.equals(errorDate)) {
-				Map<String, String> errors = new HashMap<>();
-				errors.put("error", errorDate);
-				return ResponseEntity.badRequest().body(errors);
+			Map<String, String> response = transactionService.updateTransaction(transactionDTO, user);
+			if (response.containsKey("error")) {
+				return ResponseEntity.badRequest().body(response);
 			}
-
-			String errorUpdate = "Current transaction already exists";
-			if (result.equals(errorUpdate)) {
-				Map<String, String> errors = new HashMap<>();
-				errors.put("error", errorUpdate);
-				return ResponseEntity.badRequest().body(errors);
-			}
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			Map<String, String> error = new HashMap<>();
 			error.put("error", e.getMessage());

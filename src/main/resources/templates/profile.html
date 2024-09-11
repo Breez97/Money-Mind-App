@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="/css/common.css">
     <link rel="stylesheet" href="/css/containers.css">
     <link rel="stylesheet" href="/css/text.css">
+    <link rel="stylesheet" href="/css/profile.css">
     <title>Profile</title>
 </head>
 <body>
@@ -29,12 +30,35 @@
         </div>
     </div>
 
-    <div class="content-container">
-        <div class="notifications-container">
-
+    <div class="summary-info-container">
+        <div class="main-text">
+            Welcome to your personal profile. On this page, you can update all the necessary information related to
+            your profile. Modify your name, nickname, and any other details to keep your profile up-to-date. Make sure
+            to save your changes after editing.
         </div>
     </div>
 
+    <div class="content-container">
+        <div class="profile-container">
+            <div class="personal-info-text">Personal info</div>
+            <div id="editErrorMessages" class="error-messages error-message-margin"></div>
+            <div class="form-field">
+                <label for="name">Full name:</label>
+                <input type="text" id="name" name="name" th:value="${name}" placeholder="Enter your name" disabled>
+            </div>
+            <div class="form-field">
+                <label for="username">Username:</label>
+                <input type="text" id="username" name="username" th:value="${username}" placeholder="Enter your username" disabled>
+            </div>
+            <div class="form-actions">
+                <button class="cta-button" id="editInfo">Edit info</button>
+                <button class="cta-button" id="saveInfo" style="display:none;">Save changes</button>
+            </div>
+        </div>
+        <button class="cta-button logout" id="logoutButton">Logout</button>
+
 </div>
+<script src="/js/jquery.js"></script>
+<script src="/js/profile.js"></script>
 </body>
 </html>

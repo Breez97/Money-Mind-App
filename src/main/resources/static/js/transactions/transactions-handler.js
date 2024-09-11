@@ -49,9 +49,9 @@ $(document).ready(function() {
     });
 
     $('#confirmDeleteButton').on('click', function() {
-        const id = $(this).data('id');
-        const type = $(this).data('type');
-        const amount = $(this).data('amount');
+        let id = $(this).data('id');
+        let type = $(this).data('type');
+        let amount = $(this).data('amount');
 
         $.ajax({
             url: `/delete-transaction/${id}`,

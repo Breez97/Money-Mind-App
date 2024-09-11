@@ -29,7 +29,7 @@ $(document).ready(function() {
     });
 
     $('.delete-button').on('click', function() {
-        const id = $(this).data('id');
+        let id = $(this).data('id');
         $('#confirmDeleteButton').data('id', id);
         $('#deleteModal').show();
     });
@@ -48,9 +48,9 @@ $(document).ready(function() {
 });
 
 function FillCategories(operation, type) {
-    const expenseCategories = ['Supermarkets', 'Clothes', 'Fast Food', 'Transaction', 'Others'];
-    const incomeCategories = ['Transaction', 'ATM', 'Others'];
-    const selector = `#${operation}-category`;
+    let expenseCategories = ['Supermarkets', 'Clothes', 'Fast Food', 'Transaction', 'Others'];
+    let incomeCategories = ['Transaction', 'ATM', 'Others'];
+    let selector = `#${operation}-category`;
 
     $(selector).empty();
     if (type == 'expense') {

@@ -64,22 +64,11 @@ public class SubscriptionController {
 
 		try {
 			Users user = userService.getCurrentUser();
-			String result = subscriptionService.addSubscription(subscriptionDTO, user);
-
-			String errorDate = "Date must be in future (at least the next day)";
-			if (result.equals(errorDate)) {
-				Map<String, String> errors = new HashMap<>();
-				errors.put("error", errorDate);
-				return ResponseEntity.badRequest().body(errors);
+			Map<String, String> response = subscriptionService.addSubscription(subscriptionDTO, user);
+			if (response.containsKey("error")) {
+				return ResponseEntity.badRequest().body(response);
 			}
-
-			String errorAdd = "Current subscription already exists";
-			if (result.equals(errorAdd)) {
-				Map<String, String> errors = new HashMap<>();
-				errors.put("error", errorAdd);
-				return ResponseEntity.badRequest().body(errors);
-			}
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			Map<String, String> error = new HashMap<>();
 			error.put("error", e.getMessage());
@@ -99,22 +88,11 @@ public class SubscriptionController {
 
 		try {
 			Users user = userService.getCurrentUser();
-			String result = subscriptionService.updateSubscription(subscriptionDTO, user);
-
-			String errorDate = "Date must be in future (at least the next day)";
-			if (result.equals(errorDate)) {
-				Map<String, String> errors = new HashMap<>();
-				errors.put("error", errorDate);
-				return ResponseEntity.badRequest().body(errors);
+			Map<String, String> response = subscriptionService.updateSubscription(subscriptionDTO, user);
+			if (response.containsKey("error")) {
+				return ResponseEntity.badRequest().body(response);
 			}
-
-			String errorAdd = "Current subscription already exists";
-			if (result.equals(errorAdd)) {
-				Map<String, String> errors = new HashMap<>();
-				errors.put("error", errorAdd);
-				return ResponseEntity.badRequest().body(errors);
-			}
-			return ResponseEntity.ok(result);
+			return ResponseEntity.ok(response);
 		} catch (Exception e) {
 			Map<String, String> error = new HashMap<>();
 			error.put("error", e.getMessage());

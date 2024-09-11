@@ -1,18 +1,19 @@
 package com.breez.money_mind.service;
 
-import com.breez.money_mind.exceptions.TransactionNotFoundException;
 import com.breez.money_mind.model.Subscription;
 import com.breez.money_mind.model.Users;
 import com.breez.money_mind.model.dto.SubscriptionDTO;
 import com.breez.money_mind.repository.SubscriptionRepository;
 import com.breez.money_mind.repository.UserRepository;
-import jakarta.validation.Valid;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -33,16 +34,21 @@ public class SubscriptionService {
 				.collect(Collectors.toList());
 	}
 
-	public String addSubscription(SubscriptionDTO subscriptionDTO, Users currentUser) {
+	@Transactional
+	public Map<String, String> addSubscription(SubscriptionDTO subscriptionDTO, Users currentUser) {
+		Map<String, String> response = new HashMap<>();
 		List<SubscriptionDTO> allSubscriptions = findAllSubscriptions(currentUser);
+
 		if (checkSubscriptionExistenceIdDB(subscriptionDTO, allSubscriptions)) {
-			return "Current subscription already exists";
+			response.put("error", "Current subscription already exists");
+			return response;
 		}
 
 		LocalDate parsedDate = LocalDate.parse(subscriptionDTO.getNextPayment(), FORMATTER);
 		LocalDate nextDay = LocalDate.now().plusDays(1);
 		if (parsedDate.isBefore(nextDay)) {
-			return "Date must be in future (at least the next day)";
+			response.put("error", "Date must be in future (at least the next day)");
+			return response;
 		}
 
 		Subscription subscription = Subscription.builder()
@@ -54,25 +60,31 @@ public class SubscriptionService {
 				.build();
 		try {
 			subscriptionRepository.save(subscription);
-			return "Subscription saves successfully";
+			response.put("message", "Subscription saved successfully");
 		} catch (Exception e) {
-			return "Error saving subscription: " + e.getMessage();
+			response.put("error", "Error saving subscription: " + e.getMessage());
 		}
+		return response;
 	}
 
-	public String updateSubscription(@Valid SubscriptionDTO subscriptionDTO, Users currentUser) {
+	@Transactional
+	public Map<String, String> updateSubscription(SubscriptionDTO subscriptionDTO, Users currentUser) {
+		Map<String, String> response = new HashMap<>();
 		List<SubscriptionDTO> allSubscriptions = findAllSubscriptions(currentUser);
 		if (!allSubscriptions.removeIf(subscription -> subscription.getId().equals(subscriptionDTO.getId()))) {
-			throw new TransactionNotFoundException("Subscription not found");
+			throw new RuntimeException("Subscription not found");
 		}
+
 		if (checkSubscriptionExistenceIdDB(subscriptionDTO, allSubscriptions)) {
-			return "Current subscription already exists";
+			response.put("error", "Current subscription already exists");
+			return response;
 		}
 
 		LocalDate parsedDate = LocalDate.parse(subscriptionDTO.getNextPayment(), FORMATTER);
 		LocalDate nextDay = LocalDate.now().plusDays(1);
 		if (parsedDate.isBefore(nextDay)) {
-			return "Date must be in future (at least the next day)";
+			response.put("error", "Date must be in future (at least the next day)");
+			return response;
 		}
 
 		Subscription subscription = Subscription.builder()
@@ -85,12 +97,14 @@ public class SubscriptionService {
 				.build();
 		try {
 			subscriptionRepository.save(subscription);
-			return "Transaction updated successfully";
+			response.put("message", "Subscription updated successfully");
 		} catch (Exception e) {
-			return "Error updating transaction: " + e.getMessage();
+			response.put("error", "Error saving subscription: " + e.getMessage());
 		}
+		return response;
 	}
 
+	@Transactional
 	public void deleteSubscription(Integer id) {
 		subscriptionRepository.deleteById(id);
 	}

@@ -41,6 +41,11 @@ public class SecurityConfiguration {
 						.failureHandler(customAuthenticationFailureHandler)
 						.permitAll()
 				)
+				.logout(logout -> logout
+						.logoutUrl("/logout")
+						.invalidateHttpSession(true)
+						.deleteCookies("JSESSIONID")
+				)
 				.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
 				.build();
 	}

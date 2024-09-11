@@ -42,7 +42,7 @@ $(document).ready(function() {
     });
 
     $('#confirmDeleteButton').on('click', function() {
-        const id = $('#deleteModal').find('input[type="hidden"]').val();
+        let id = $('#deleteModal').find('input[type="hidden"]').val();
 
         $.ajax({
             url: `/delete-subscription/${id}`,

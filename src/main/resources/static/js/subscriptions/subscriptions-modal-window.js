@@ -4,9 +4,9 @@ $(document).ready(function() {
     });
 
     $('.edit-button').on('click', function() {
-        const subscription = $(this).closest('.subscription-info');
-        const amountText = subscription.find('.subscription-text').eq(1).text().trim();
-        const amount = parseFloat(amountText.replace('$', ''));
+        let subscription = $(this).closest('.subscription-info');
+        let amountText = subscription.find('.subscription-text').eq(1).text().trim();
+        let amount = parseFloat(amountText.replace('$', ''));
         if (!isNaN(amount)) amount = amount.toFixed(2);
         else amount = '0.00';
 
@@ -20,8 +20,8 @@ $(document).ready(function() {
     });
 
     $('.delete-button').on('click', function() {
-        const subscription = $(this).closest('.subscription-info');
-        const id = subscription.find('input[type="hidden"]').val();
+        let subscription = $(this).closest('.subscription-info');
+        let id = subscription.find('input[type="hidden"]').val();
 
         $('#deleteModal').show();
         $('#deleteModal').find('input[type="hidden"]').val(id);
