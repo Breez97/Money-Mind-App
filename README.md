@@ -8,7 +8,13 @@ interface and robust data encryption, it ensures both convenience and security i
 ### Tech Stack:
 
 - Java 17
-- Spring (Spring Boot, Spring Web, Spring Security, Spring Data)
+- Spring Boot
+- Spring MVC
+- Spring Data JPA
+- Spring Security
+- Hibernate
+- Thymeleaf
+- Javax Validation API
 - PostgeSQL
 - Maven
 - Docker
@@ -58,6 +64,10 @@ Alternatively, you can run the application in Docker:
 
 2. **Start the application**: Run the `start.sh` script after configuration, then access the application
    at http://localhost:8080/.
+
+### ER Diagram
+
+![ER Diagram](./misc/erd.png)
 
 ### Appearance:
 

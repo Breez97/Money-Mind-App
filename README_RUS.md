@@ -9,8 +9,14 @@ Telegram. Благодаря удобному интерфейсу и надеж
 ### Технологический стек:
 
 - Java 17
-- Spring (Spring Boot, Spring Web, Spring Security, Spring Data)
-- PostgreSQL
+- Spring Boot
+- Spring MVC
+- Spring Data JPA
+- Spring Security
+- Hibernate
+- Thymeleaf
+- Javax Validation API
+- PostgeSQL
 - Maven
 - Docker
 
@@ -60,6 +66,10 @@ Telegram. Благодаря удобному интерфейсу и надеж
 
 2. **Запустите приложение**: выполните скрипт `start.sh` после настройки, затем откройте приложение по
    адресу http://localhost:8080/.
+
+### ER модель
+
+![ER Diagram](./misc/erd.png)
 
 ### Внешний вид:
 
