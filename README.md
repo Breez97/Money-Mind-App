@@ -13,11 +13,16 @@ interface and robust data encryption, it ensures both convenience and security i
 - Maven
 - Docker
 
+Authentication is implemented using JWT. When a user logs in, they provide their credentials,
+which include a username and a password. All users passwords are securely stored in the database in an encrypted form
+using BCrypt hashing.
+
 ### How To Run The Application
 
 To test or use the application locally, follow these steps:
 
-1. **Configure the application**: Fill in the `application.properties` file located in the `src/main/resources/` directory.
+1. **Configure the application**: Fill in the `application.properties` file located in the `src/main/resources/`
+   directory.
    Here's
    an example:
     ```properties
@@ -57,22 +62,29 @@ Alternatively, you can run the application in Docker:
 ### Appearance:
 
 #### Main Page
+
 ![Main Page](./misc/main_page.png)
 
 #### Transactions page
+
 ![Transactions Page](./misc/transactions_page.png)
 
 #### Subscriptions Page
+
 ![Subscriptions Page](./misc/subscriptions_page.png)
 
 #### User Profile
+
 ![User Profile](./misc/user_profile.png)
 
 #### 404 Page
+
 ![404 Page](./misc/404_page.png)
 
 #### Example of Incorrect Input
+
 ![Incorrect Input](./misc/incorrect_input.png)
 
 #### Example of Telegram Bot usage
+
 ![Telegram Bot](./misc/telegram_bot.png)
