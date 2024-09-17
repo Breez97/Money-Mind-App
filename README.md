@@ -5,6 +5,12 @@ spending, track income, and handle subscriptions. The app allows easy recording 
 activities, sends reminders for upcoming payments, and delivers notifications via Telegram. With a user-friendly
 interface and robust data encryption, it ensures both convenience and security in managing personal finances.
 
+### Table of Content
+- [Tech Stack](#tech-stack)
+- [How To Run The Application](#how-to-run-the-application)
+- [ER Diagram](#er-diagram)
+- [Appearance](#appearance)
+
 ### Tech Stack:
 
 - Java 17
@@ -67,7 +73,66 @@ Alternatively, you can run the application in Docker:
 
 ### ER Diagram
 
-![ER Diagram](./misc/erd.png)
+```mermaid
+---
+title: Money Mind ER Diagram
+---
+erDiagram
+   subscriptions {
+      int id PK
+      varchar title
+      double amount
+      varchar frequency
+      date next_payment
+   }
+
+   users {
+      int id PK
+      varchar username "UNIQUE"
+      varchar password
+      varchar name
+   }
+
+   user_subscriptions {
+      int id PK
+      int user_id FK
+      int subscription_id FK
+   }
+   
+   transactions {
+       int id PK
+       varchar title
+       varchar type
+       double amount
+       varchar category
+       date transaction_date
+   }
+   
+   user_transactions {
+       int id PK
+       int user_id FK
+       int transaction_id FK
+   }
+   
+   notifications {
+       int id PK
+       varchar chatId
+       boolean telegam_enabled
+   }
+   
+   user_notifications {
+       int id PK
+       int user_id FK
+       int notification_id FK
+   }
+
+   users ||--o{ user_subscriptions : ""
+   users ||--o{ user_transactions : ""
+   users ||--o{ user_notifications : ""
+   subscriptions ||--o{ user_subscriptions : ""
+   transactions ||--o{ user_transactions : ""
+   notifications ||--o{ user_notifications : ""
+```
 
 ### Appearance:
 

@@ -6,6 +6,12 @@ Money Mind — это инструмент для управления личн�
 Telegram. Благодаря удобному интерфейсу и надежному шифрованию данных оно обеспечивает как удобство, так и безопасность
 в управлении финансами.
 
+### Содержание:
+- [Технологический стек](#технологический-стек)
+- [Как запустить приложение](#как-запустить-приложение)
+- [ER модель](#er-модель)
+- [Внешний вид](#внешний-вид)
+
 ### Технологический стек:
 
 - Java 17
@@ -69,7 +75,66 @@ Telegram. Благодаря удобному интерфейсу и надеж
 
 ### ER модель
 
-![ER Diagram](./misc/erd.png)
+```mermaid
+---
+title: Money Mind ER Модель
+---
+erDiagram
+   subscriptions {
+      int id PK
+      varchar title
+      double amount
+      varchar frequency
+      date next_payment
+   }
+
+   users {
+      int id PK
+      varchar username "UNIQUE"
+      varchar password
+      varchar name
+   }
+
+   user_subscriptions {
+      int id PK
+      int user_id FK
+      int subscription_id FK
+   }
+   
+   transactions {
+       int id PK
+       varchar title
+       varchar type
+       double amount
+       varchar category
+       date transaction_date
+   }
+   
+   user_transactions {
+       int id PK
+       int user_id FK
+       int transaction_id FK
+   }
+   
+   notifications {
+       int id PK
+       varchar chatId
+       boolean telegam_enabled
+   }
+   
+   user_notifications {
+       int id PK
+       int user_id FK
+       int notification_id FK
+   }
+
+   users ||--o{ user_subscriptions : ""
+   users ||--o{ user_transactions : ""
+   users ||--o{ user_notifications : ""
+   subscriptions ||--o{ user_subscriptions : ""
+   transactions ||--o{ user_transactions : ""
+   notifications ||--o{ user_notifications : ""
+```
 
 ### Внешний вид:
 
